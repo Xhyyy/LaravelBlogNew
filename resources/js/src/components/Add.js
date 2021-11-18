@@ -1,17 +1,20 @@
-import { Grid, TextareaAutosize, TextField,Button } from '@material-ui/core';
-
-import React from 'react';
-import { useState } from 'react';
-import ReactDOM from 'react-dom';
+import React,{ useState } from 'react';
 import api from '../api';
+import { Grid, TextareaAutosize, TextField, Button } from '@material-ui/core';
+// import { IconButton, Close } from '@material-ui/icons';
+
 
 const Add = () => {
+    // const [id, setId] = useState();
     const [title,setTitle] = useState('');
     const [content,setContent] = useState('');
     
-    const display = (data) => {
-        
-        api.post('api/blog/addOrUpdate', data)
+    const addBlog = (data) => {
+        const dataToSend = {            
+            title: data.title,
+            content: data.content
+        }
+        api.post('api/blog/addOrUpdate', dataToSend)
         .then ((response)=>{
             if (response.data.code == 200) {
                 alert(response.data.message);
@@ -21,32 +24,32 @@ const Add = () => {
         })
     }
     return (  
-
-        <Grid
-            container
-            spacing={1}
-        >
+        <Grid container spacing={1}>
             <Grid container item xs={12}>
                 <TextField 
-                    value={title} 
+                    value={title}
+                    size='small' 
                     variant='outlined' 
                     placeholder='Blog Title' 
                     onChange={(e) => setTitle(e.target.value)}
+                    fullWidth
                 />
             </Grid>
             <Grid container item xs={12}>
                 <TextareaAutosize 
                     value={content}
-                    minRows={7} 
+                    minRows={7}
+                    maxRows={12}
                     placeholder='Type Content Here...' 
                     onChange={(e) => setContent(e.target.value)}
+                    style={{ width: "100%" }}
                 />
             </Grid>
             <Grid container item xs={12}>
                 <Button 
                     variant='contained' 
                     color='primary' 
-                    onClick={()=> display({title: title,content: content})}
+                    onClick={()=> addBlog({title: title,content: content})}
                 >
                     Publish Blog
                 </Button>
@@ -56,7 +59,3 @@ const Add = () => {
 }
 
 export default Add;
-
-if (document.getElementById('add')) {
-    ReactDOM.render(<Add />, document.getElementById('add'));
-}

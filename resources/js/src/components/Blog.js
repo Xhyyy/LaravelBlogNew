@@ -1,19 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { makeStyles } from '@material-ui/core/styles';
 import React , {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import api from '../api';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Avatar from '@material-ui/core/Avatar';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import {Dialog,DialogTitle,DialogContent, ButtonBase} from '@material-ui/core'
+import { makeStyles, Button, IconButton, Typography, Box, Grid, Card, CardActionArea, CardActions, CardContent} from '@material-ui/core';
+import { HighlightOff } from '@material-ui/icons';
+import Add from './Add';
+import Edit from './Edit';
 
 const useStyles = makeStyles((theme) => ({
   hero: {
@@ -28,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     color: "#fff",
     fontSize: "4rem",
+    marginBottom: 50,
     [theme.breakpoints.down("sm")]: {
       height: 300,
       fontSize: "3em"
@@ -39,9 +33,7 @@ const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: "100%",
     marginTop: theme.spacing(3),
-  },
-  media: {
-    height: 240
+    width: '100vw',
   },
   cardActions: {
     display: "flex",
@@ -54,12 +46,61 @@ const useStyles = makeStyles((theme) => ({
   paginationContainer: {
     display: "flex",
     justifyContent: "center"
+  },
+  titleRoot: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+  contentRoot: {
+    padding: theme.spacing(2),
+  },
+  actionRoot: {
+    margin: 0,
+    padding: theme.spacing(1),
   }
 }));
+
 
 const Blog = () => {
   const classes = useStyles();
   const [blog, setBlog] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [showChanges, setShowChanges] = useState('');
+  // const [id, setId] = useState();
+  const [blogTitle,setBlogTitle] = useState('');
+  const [blogContent,setBlogContent] = useState('');
+  const [blogId,setBlogId] = useState(0);
+  const [openEdit,setOpenEdit] = useState(false);
+
+  const [title,setTitle] = useState('');
+  const [content,setContent] = useState('');
+
+  const handleEditDialog = (data) => {
+    console.log(data);  
+    setBlogTitle(data.title);
+    setBlogContent(data.content);
+    setBlogId(data.id);
+    setOpenEdit(true);
+  }
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  }
+  
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const blogPost = async() =>{
     const result = await api.post('api/blog/showBlog');
     if(result.status == 200) {
@@ -67,33 +108,61 @@ const Blog = () => {
     }
   }
 
+  const deleteBlog = async(data) => {
+    setShowChanges('...Delete on Process');
+    const dataToDelete = {    
+        id: data.id,
+        status: 'deleted'
+    }
+    const response = await api.post('api/blog/addOrUpdate', dataToDelete);
+    if( response.status == 200 && response.data.code == 200 ) {
+        setShowChanges('Deleted');
+        alert(response.data.message);
+    }else {
+        alert('ERROR!');
+    }
+  }
+
+  const unpublishBlog = async(data) => {
+    setShowChanges('...Please wait');
+    const dataToUnpublish = {    
+        id: data.id,
+        status: 'unpublish'
+    }
+    const response = await api.post('api/blog/addOrUpdate', dataToUnpublish);
+    if( response.status == 200 && response.data.code == 200 ) {
+        setShowChanges('Unpblished');
+        alert(response.data.message);
+    }else {
+        alert('ERROR!');
+    }
+  }
+
   useEffect(()=>{
     blogPost();
-  },[]);
+  },[openEdit,open,showChanges]);
 
   return (
     <div>
       <Box className={classes.hero}>
         <Box>Blog Page</Box>
-      </Box>
-
+      </Box>      
       {/* <Container maxWidth="lg" className={classes.blogsContainer}> */}
-        <Grid container spacing={3}>
-        <Box display='flex' flexDirection='row' justifyContent='center' className={classes.blogsContainer}>
-          <Grid item xs={12} sm={6} md={4}>
-          {
-            blog.length == 0 ?
-            ''
-            :
-            blog.map((datas)=>{
-              return(
-                
-                  <Card className={classes.card}  key={datas.id}>
+      <Grid container spacing={3}>
+        <Box>
+          <Box display='flex'>
+          <Button variant="outlined" color="primary" onClick={handleClickOpen} size='medium' style={{maxHeight: '20px'}}>
+            Add New Blog
+          </Button>
+            <Grid item xs={12} sm={6} md={4}>
+            {
+              blog.length == 0 ?
+              ''
+              :
+              blog.map((datas)=>{
+                return(
+                  <Card className={classes.card}  key={datas.id} >
                     <CardActionArea>
-                      <CardMedia
-                        className={classes.media}
-                        image="https://images.pexels.com/photos/1464143/pexels-photo-1464143.jpeg?cs=srgb&dl=pexels-s-migaj-1464143.jpg&fm=jpg"
-                      />
                       <CardContent>
                         <Typography gutterBottom variant="h5" component="h2" color="primary">
                           {datas.title}
@@ -104,31 +173,97 @@ const Blog = () => {
                       </CardContent>
                     </CardActionArea>
                     <CardActions className={classes.cardActions}>
+                      <Box display='flex' flexDirection='column'>
                       <Box className={classes.author}>
-                        <Avatar src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" />
-                        <Box ml={2}>
+                        <Box>
                           <Typography variant="subtitle2" component="p">
-                            Jane Doe
+                            By: Jane Doe
                           </Typography>
                           <Typography variant="subtitle2" color="textSecondary" component="p">
-                            May 14, 2021
+                            Published Date: {datas.created_at}
                           </Typography>
                         </Box>
                       </Box>
-                      <Box>
-                        <BookmarkBorderIcon />
+                      <Box display='flex' flexDirection='row'>
+                      <Box className={classes.editButton}>
+                          <Button 
+                            variant="outlined" 
+                            size='small' 
+                            color='primary'
+                            onClick={() => handleEditDialog(datas)}
+                          >
+                            Edit
+                          </Button>
+                        </Box>
+                        <Box className={classes.deleteButton}>
+                          <Button 
+                            variant="outlined" 
+                            size='small' 
+                            color='secondary'
+                            onClick={() => deleteBlog(datas)}
+                          >
+                            Delete
+                          </Button>
+                        </Box>
+                        <Box className={classes.unpublishButton}>
+                          <Button 
+                            variant="outlined" 
+                            size='small' 
+                            color='secondary'
+                            onClick={() => unpublishBlog(datas)}
+                          >
+                            Unpublish
+                          </Button>
+                        </Box>
+                        </Box>
                       </Box>
                     </CardActions>
                   </Card>
-              );
-            })
-          }
-          </Grid>
-
+                );
+              })
+            }
+            </Grid>
+          </Box>
 
         </Box>
-        </Grid>
+      </Grid>
       {/* </Container> */}
+      <Box>
+        <Dialog onClose={handleClose} open={open}>
+          <Box>
+            <DialogTitle onClose={handleClose}>
+              Add New Blog Post
+              <Box flexGrow={1}/>
+              <IconButton onClick={handleClose}>
+                <HighlightOff/>
+              </IconButton>
+            </DialogTitle>
+          </Box>
+
+          <DialogContent>
+          <Add/>
+          </DialogContent>
+        </Dialog>
+        <Dialog onClose={handleCloseEdit} open={openEdit}>
+          <Box>
+            <DialogTitle onClose={handleCloseEdit}>
+              <IconButton onClick={handleCloseEdit}>
+                <HighlightOff/>
+              </IconButton>
+              <Box flexGrow={1}/>
+              Edit {blogTitle}
+            </DialogTitle>
+          </Box>
+          <DialogContent>
+            <Edit 
+              blogTitle={blogTitle}
+              blogContent={blogContent}
+              blogId={blogId}
+              handleClose={handleCloseEdit}
+            />
+          </DialogContent>
+        </Dialog>
+      </Box>
     </div>
   );
 }

@@ -13,11 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'PagesController@index');
+Route::get('/', 'PagesController@blog');
 
-Route::get('/blog', 'PagesController@blog');
-
-Route::get('/add', 'PagesController@add');
+// Route::get('/blog', 'PagesController@blog');
 
 Route::get('/edit', 'PagesController@edit');
 

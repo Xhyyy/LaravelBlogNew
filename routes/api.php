@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('blog')->group(function () {
-    Route::post('/addOrUpdate', 'PostController@store');
+    Route::post('/addOrUpdate', 'PostController@storeOrUpdate');
     Route::post('/showBlog', 'PostController@showBlogs');
+    Route::post('/destroy', 'PostController@destroy');
 });

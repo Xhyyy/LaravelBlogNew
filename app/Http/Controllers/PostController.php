@@ -1,68 +1,46 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Post;
 use Carbon\Carbon;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $posts = Post::all();
         return view('posts.index')->with('posts', $posts);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function storeOrUpdate(Request $request)
     {
         $blog = $request -> all();
-        $blog['created_at'] =  gmdate('Y-m-d H:i:s');
-        $posts = Post::firstOrCreate($blog);
-
-        $response['message'] = 'Successfully Created';
+        if(isset($blog['id'])){
+            $id = $blog['id'];
+            $blog['updated_at'] = gmdate('Y-m-d H:i:s');
+            $post = Post::whereId($id)->update($blog);
+            if (isset($blog['status'])) {
+                $response['message'] = 'Blog ' . $blog['status'];                
+            } else {
+                $response['message'] = 'Blog Updated!';   
+            }
+        }else{
+            $blog['created_at'] =  gmdate('Y-m-d H:i:s');
+            $blog['status'] = 'published';
+            $posts = Post::firstOrCreate($blog);
+            $response['message'] = 'Successfully Created';
+        }
         $response['code'] = 200;
         return $response;
-        
+
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $select = [
-            'id',
-            'title',
-            'content',
-            'created_at',
-            'updated_at'
-        ];
-        
-        // $titles = DB::table('posts')->pluck('title');
+        $result = Post::find($id);
+        return $result;
     }
 
     public function showBlogs(Request $request)
@@ -75,7 +53,7 @@ class PostController extends Controller
             'created_at',
             'updated_at'
         ];
-        $blog = Post::select($select);
+        $blog = Post::select($select)->where('status', '=', 'published');
         if (isset($params['id'])) {
             $blog -> where('id','=', $params['id']);
         }
@@ -83,38 +61,4 @@ class PostController extends Controller
         return $response;
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
