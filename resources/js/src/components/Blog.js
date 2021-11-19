@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import api from '../api';
-import { Dialog, DialogTitle, DialogContent, ButtonBase } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent, ButtonBase, Container } from '@material-ui/core'
 import { makeStyles, Button, IconButton, Typography, Box, Grid, Card, CardActionArea, CardActions, CardContent } from '@material-ui/core';
 import { HighlightOff } from '@material-ui/icons';
 import Add from './Add';
@@ -11,7 +11,7 @@ import Edit from './Edit';
 const useStyles = makeStyles((theme) => ({
   hero: {
     backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.pexels.com/photos/4301252/pexels-photo-4301252.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")',
-    height: "500px",
+    height: "350px",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -147,21 +147,14 @@ const Blog = () => {
       <Box className={classes.hero}>
         <Box>Blog Page</Box>
       </Box>
-      {/* <Container maxWidth="lg" className={classes.blogsContainer}> */}
-      <Grid container spacing={3}>
-        <Box>
-          <Box display='flex'>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen} size='medium' style={{ maxHeight: '20px' }}>
-              Add New Blog
-            </Button>
-            <Grid item xs={12} sm={6} md={4}>
-              {
-                blog.length == 0 ?
-                  ''
-                  :
-                  blog.map((datas) => {
-                    return (
-                      <Card className={classes.card} key={datas.id} >
+      <Container>
+        <Grid container spacing={3}>
+            {
+              blog.length == 0 ? '' :
+                blog.map((datas) => {
+                  return (
+                    <Grid item xs={12} sm={6} md={4} key={datas.id}>
+                      <Card className={classes.card} >
                         <CardActionArea>
                           <CardContent>
                             <Typography gutterBottom variant="h5" component="h2" color="primary">
@@ -219,53 +212,13 @@ const Blog = () => {
                           </Box>
                         </CardActions>
                       </Card>
-                    );
-                  })
-              }
-            </Grid>
-          </Box>
-
-        </Box>
-      </Grid>
-      {/* </Container> */}
-      <Box>
-        <Dialog onClose={handleClose} open={open}>
-          <Box>
-            <DialogTitle onClose={handleClose}>
-              <IconButton onClick={handleClose}>
-                <HighlightOff />
-              </IconButton>
-              <Box flexGrow={1} />
-              Add New Blog Post
-            </DialogTitle>
-          </Box>
-
-          <DialogContent>
-            <Add
-              handleClose={handleClose}
-            />
-          </DialogContent>
-        </Dialog>
-        <Dialog onClose={handleCloseEdit} open={openEdit}>
-          <Box>
-            <DialogTitle onClose={handleCloseEdit}>
-              <IconButton onClick={handleCloseEdit}>
-                <HighlightOff />
-              </IconButton>
-              <Box flexGrow={1} />
-              Edit {blogTitle}
-            </DialogTitle>
-          </Box>
-          <DialogContent>
-            <Edit
-              blogTitle={blogTitle}
-              blogContent={blogContent}
-              blogId={blogId}
-              handleClose={handleCloseEdit}
-            />
-          </DialogContent>
-        </Dialog>
-      </Box>
+                    </Grid>
+                  );
+                })
+            }
+          
+        </Grid>
+      </Container>
     </div>
   );
 }

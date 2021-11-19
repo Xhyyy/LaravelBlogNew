@@ -1,6 +1,6 @@
 import { makeStyles, Box, Grid, Typography, Card, CardActionArea, CardContent, CardActions, Button } from '@material-ui/core';
-// import { DataGrid } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 import ReactDOM from 'react-dom';
 import api from '../api'
 
@@ -179,14 +179,14 @@ return (
             <Grid item md={6}>
                 <Typography variant="h5">BLOGS</Typography>
 
-            {/* <div style={{ height: 400, width: '100%' }}>
+            <div style={{ height: 400, width: '100%' }}>
             <DataGrid
                 rows={blog}
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
             />
-            </div> */}
+            </div>
 
 
                 {
