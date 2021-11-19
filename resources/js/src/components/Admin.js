@@ -103,7 +103,7 @@ const Admin = () => {
             field: 'id',
             flex: 1,
             renderCell: (params) => {
-                console.log('------', params);
+                console.log('------thhe params', params.row);
                 return (
                     <div>
                         <Box className={classes.deleteButton}>
@@ -111,7 +111,7 @@ const Admin = () => {
                                 variant="outlined"
                                 size='small'
                                 color='secondary'
-                                onClick={() => deleteBlog(params)}
+                                onClick={() => deleteBlog(params.row)}
                             >
                                 Delete
                             </Button>
@@ -121,7 +121,7 @@ const Admin = () => {
                                 variant="outlined"
                                 size='small'
                                 color='secondary'
-                                onClick={() => unpublishBlog(params)}
+                                onClick={() => unpublishBlog(params.row)}
                             >
                                 Unpublish
                             </Button>
