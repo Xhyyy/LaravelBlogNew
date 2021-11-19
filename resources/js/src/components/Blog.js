@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React , {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import api from '../api';
-import {Dialog,DialogTitle,DialogContent, ButtonBase} from '@material-ui/core'
-import { makeStyles, Button, IconButton, Typography, Box, Grid, Card, CardActionArea, CardActions, CardContent} from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, ButtonBase } from '@material-ui/core'
+import { makeStyles, Button, IconButton, Typography, Box, Grid, Card, CardActionArea, CardActions, CardContent } from '@material-ui/core';
 import { HighlightOff } from '@material-ui/icons';
 import Add from './Add';
 import Edit from './Edit';
@@ -73,16 +73,16 @@ const Blog = () => {
   const [open, setOpen] = useState(false);
   const [showChanges, setShowChanges] = useState('');
   // const [id, setId] = useState();
-  const [blogTitle,setBlogTitle] = useState('');
-  const [blogContent,setBlogContent] = useState('');
-  const [blogId,setBlogId] = useState(0);
-  const [openEdit,setOpenEdit] = useState(false);
+  const [blogTitle, setBlogTitle] = useState('');
+  const [blogContent, setBlogContent] = useState('');
+  const [blogId, setBlogId] = useState(0);
+  const [openEdit, setOpenEdit] = useState(false);
 
-  const [title,setTitle] = useState('');
-  const [content,setContent] = useState('');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   const handleEditDialog = (data) => {
-    console.log(data);  
+    console.log(data);
     setBlogTitle(data.title);
     setBlogContent(data.content);
     setBlogId(data.id);
@@ -92,7 +92,7 @@ const Blog = () => {
   const handleCloseEdit = () => {
     setOpenEdit(false);
   }
-  
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -101,127 +101,127 @@ const Blog = () => {
     setOpen(false);
   };
 
-  const blogPost = async() =>{
+  const blogPost = async () => {
     const result = await api.post('api/blog/showBlog');
-    if(result.status == 200) {
+    if (result.status == 200) {
       setBlog(result.data.blogData);
     }
   }
 
-  const deleteBlog = async(data) => {
+  const deleteBlog = async (data) => {
     setShowChanges('...Delete on Process');
-    const dataToDelete = {    
-        id: data.id,
-        status: 'deleted'
+    const dataToDelete = {
+      id: data.id,
+      status: 'deleted'
     }
     const response = await api.post('api/blog/addOrUpdate', dataToDelete);
-    if( response.status == 200 && response.data.code == 200 ) {
-        setShowChanges('Deleted');
-        alert(response.data.message);
-    }else {
-        alert('ERROR!');
+    if (response.status == 200 && response.data.code == 200) {
+      setShowChanges('Deleted');
+      alert(response.data.message);
+    } else {
+      alert('ERROR!');
     }
   }
 
-  const unpublishBlog = async(data) => {
+  const unpublishBlog = async (data) => {
     setShowChanges('...Please wait');
-    const dataToUnpublish = {    
-        id: data.id,
-        status: 'unpublish'
+    const dataToUnpublish = {
+      id: data.id,
+      status: 'unpublish'
     }
     const response = await api.post('api/blog/addOrUpdate', dataToUnpublish);
-    if( response.status == 200 && response.data.code == 200 ) {
-        setShowChanges('Unpblished');
-        alert(response.data.message);
-    }else {
-        alert('ERROR!');
+    if (response.status == 200 && response.data.code == 200) {
+      setShowChanges('Unpblished');
+      alert(response.data.message);
+    } else {
+      alert('ERROR!');
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     blogPost();
-  },[openEdit,open,showChanges]);
+  }, [openEdit, open, showChanges]);
 
   return (
     <div>
       <Box className={classes.hero}>
         <Box>Blog Page</Box>
-      </Box>      
+      </Box>
       {/* <Container maxWidth="lg" className={classes.blogsContainer}> */}
       <Grid container spacing={3}>
         <Box>
           <Box display='flex'>
-          <Button variant="outlined" color="primary" onClick={handleClickOpen} size='medium' style={{maxHeight: '20px'}}>
-            Add New Blog
-          </Button>
+            <Button variant="outlined" color="primary" onClick={handleClickOpen} size='medium' style={{ maxHeight: '20px' }}>
+              Add New Blog
+            </Button>
             <Grid item xs={12} sm={6} md={4}>
-            {
-              blog.length == 0 ?
-              ''
-              :
-              blog.map((datas)=>{
-                return(
-                  <Card className={classes.card}  key={datas.id} >
-                    <CardActionArea>
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2" color="primary">
-                          {datas.title}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          {datas.content}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions className={classes.cardActions}>
-                      <Box display='flex' flexDirection='column'>
-                      <Box className={classes.author}>
-                        <Box>
-                          <Typography variant="subtitle2" component="p">
-                            By: Jane Doe
-                          </Typography>
-                          <Typography variant="subtitle2" color="textSecondary" component="p">
-                            Published Date: {datas.created_at}
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Box display='flex' flexDirection='row'>
-                      <Box className={classes.editButton}>
-                          <Button 
-                            variant="outlined" 
-                            size='small' 
-                            color='primary'
-                            onClick={() => handleEditDialog(datas)}
-                          >
-                            Edit
-                          </Button>
-                        </Box>
-                        <Box className={classes.deleteButton}>
-                          <Button 
-                            variant="outlined" 
-                            size='small' 
-                            color='secondary'
-                            onClick={() => deleteBlog(datas)}
-                          >
-                            Delete
-                          </Button>
-                        </Box>
-                        <Box className={classes.unpublishButton}>
-                          <Button 
-                            variant="outlined" 
-                            size='small' 
-                            color='secondary'
-                            onClick={() => unpublishBlog(datas)}
-                          >
-                            Unpublish
-                          </Button>
-                        </Box>
-                        </Box>
-                      </Box>
-                    </CardActions>
-                  </Card>
-                );
-              })
-            }
+              {
+                blog.length == 0 ?
+                  ''
+                  :
+                  blog.map((datas) => {
+                    return (
+                      <Card className={classes.card} key={datas.id} >
+                        <CardActionArea>
+                          <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2" color="primary">
+                              {datas.title}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                              {datas.content}
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                        <CardActions className={classes.cardActions}>
+                          <Box display='flex' flexDirection='column'>
+                            <Box className={classes.author}>
+                              <Box>
+                                <Typography variant="subtitle2" component="p">
+                                  By: Jane Doe
+                                </Typography>
+                                <Typography variant="subtitle2" color="textSecondary" component="p">
+                                  Published Date: {datas.created_at}
+                                </Typography>
+                              </Box>
+                            </Box>
+                            <Box display='flex' flexDirection='row'>
+                              <Box className={classes.editButton}>
+                                <Button
+                                  variant="outlined"
+                                  size='small'
+                                  color='primary'
+                                  onClick={() => handleEditDialog(datas)}
+                                >
+                                  Edit
+                                </Button>
+                              </Box>
+                              <Box className={classes.deleteButton}>
+                                <Button
+                                  variant="outlined"
+                                  size='small'
+                                  color='secondary'
+                                  onClick={() => deleteBlog(datas)}
+                                >
+                                  Delete
+                                </Button>
+                              </Box>
+                              <Box className={classes.unpublishButton}>
+                                <Button
+                                  variant="outlined"
+                                  size='small'
+                                  color='secondary'
+                                  onClick={() => unpublishBlog(datas)}
+                                >
+                                  Unpublish
+                                </Button>
+                              </Box>
+                            </Box>
+                          </Box>
+                        </CardActions>
+                      </Card>
+                    );
+                  })
+              }
             </Grid>
           </Box>
 
@@ -232,30 +232,32 @@ const Blog = () => {
         <Dialog onClose={handleClose} open={open}>
           <Box>
             <DialogTitle onClose={handleClose}>
-              Add New Blog Post
-              <Box flexGrow={1}/>
               <IconButton onClick={handleClose}>
-                <HighlightOff/>
+                <HighlightOff />
               </IconButton>
+              <Box flexGrow={1} />
+              Add New Blog Post
             </DialogTitle>
           </Box>
 
           <DialogContent>
-          <Add/>
+            <Add
+              handleClose={handleClose}
+            />
           </DialogContent>
         </Dialog>
         <Dialog onClose={handleCloseEdit} open={openEdit}>
           <Box>
             <DialogTitle onClose={handleCloseEdit}>
               <IconButton onClick={handleCloseEdit}>
-                <HighlightOff/>
+                <HighlightOff />
               </IconButton>
-              <Box flexGrow={1}/>
+              <Box flexGrow={1} />
               Edit {blogTitle}
             </DialogTitle>
           </Box>
           <DialogContent>
-            <Edit 
+            <Edit
               blogTitle={blogTitle}
               blogContent={blogContent}
               blogId={blogId}
@@ -271,5 +273,5 @@ const Blog = () => {
 export default Blog;
 
 if (document.getElementById('blog')) {
-    ReactDOM.render(<Blog />, document.getElementById('blog'));
+  ReactDOM.render(<Blog />, document.getElementById('blog'));
 }

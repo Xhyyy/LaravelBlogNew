@@ -53,7 +53,7 @@ class PostController extends Controller
             'created_at',
             'updated_at'
         ];
-        $blog = Post::select($select)->where('status', '=', 'published');
+        $blog = Post::select($select)->orderBy('id', 'DESC')->where('status', '=', 'published');
         if (isset($params['id'])) {
             $blog -> where('id','=', $params['id']);
         }

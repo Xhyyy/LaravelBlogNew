@@ -14,9 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'PagesController@blog');
-
+Route::get('/admin', 'PagesController@admin');
+Route::get('/author', 'PagesController@author');
 // Route::get('/blog', 'PagesController@blog');
-
-Route::get('/edit', 'PagesController@edit');
-
-Route::resource('posts', 'PostController');
+// Route::get('/edit', 'PagesController@edit');
+// Route::resource('posts', 'PostController');

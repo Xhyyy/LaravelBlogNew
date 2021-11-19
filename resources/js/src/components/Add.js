@@ -4,25 +4,27 @@ import { Grid, TextareaAutosize, TextField, Button } from '@material-ui/core';
 // import { IconButton, Close } from '@material-ui/icons';
 
 
-const Add = () => {
+const Add = (props) => {
     // const [id, setId] = useState();
+    const {handleClose} = props
     const [title,setTitle] = useState('');
     const [content,setContent] = useState('');
     
-    const addBlog = (data) => {
+    const addBlog = async(data) => {
         const dataToSend = {            
             title: data.title,
             content: data.content
         }
-        api.post('api/blog/addOrUpdate', dataToSend)
-        .then ((response)=>{
-            if (response.data.code == 200) {
-                alert(response.data.message);
-            }else {
-                alert('ERROR!');
-            }
-        })
+        
+        const response = await api.post('api/blog/addOrUpdate', dataToSend);
+        if (response.data.code == 200) {
+            handleClose();
+            alert(response.data.message);
+        }else {
+            alert('ERROR!');
+        }
     }
+    
     return (  
         <Grid container spacing={1}>
             <Grid container item xs={12}>

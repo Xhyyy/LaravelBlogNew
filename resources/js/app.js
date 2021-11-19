@@ -16,5 +16,5 @@ require('./bootstrap');
 require('./src/components/Header');
 require('./src/components/Index');
 require('./src/components/Blog');
-require('./src/components/Add');
-require('./src/components/Posts');
+require('./src/components/Admin');
+require('./src/components/Author');

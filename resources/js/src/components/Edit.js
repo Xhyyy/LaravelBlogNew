@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React,{ useState } from "react";
 import api from '../api';
 import { Grid, TextareaAutosize, TextField, Button } from '@material-ui/core';
@@ -13,6 +14,7 @@ const Edit = (props) => {
             title: data.title,
             content: data.content
         }
+        
         const response = await api.post('api/blog/addOrUpdate', dataToSend);
         if( response.status == 200 && response.data.code == 200 ) {
             handleClose();
