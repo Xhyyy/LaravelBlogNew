@@ -23,7 +23,7 @@ const Login = () => {
     console.log('---->',data);
     const response = await api.post('api/user/loginUser', data);
     if (response.data.code == 200) {
-      console.log('asdasd',response.data.message);
+      console.log(response.data.message);
     }else {
       console.log(response.data.message);
     }
