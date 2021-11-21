@@ -24,16 +24,18 @@ class PostController extends Controller
             $post = Post::whereId($id)->update($blog);
             if (isset($blog['status'])) {
                 $response['message'] = 'Blog ' . $blog['status'];                
+                $response['code'] = 200;
             } else {
-                $response['message'] = 'Blog Updated!';   
+                $response['message'] = 'Blog Updated!'; 
+                $response['code'] = 200;
             }
         }else{
             $blog['created_at'] =  gmdate('Y-m-d H:i:s');
             $blog['status'] = 'published';
             $posts = Post::firstOrCreate($blog);
+            $response['code'] = 200;
             $response['message'] = 'Successfully Created';
         }
-        $response['code'] = 200;
         return $response;
 
     }
@@ -51,11 +53,12 @@ class PostController extends Controller
             'title',
             'content',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'status',
         ];
         $blog = Post::select($select)->orderBy('id', 'DESC')->where('status', '=', 'published');
-        if (isset($params['id'])) {
-            $blog -> where('id','=', $params['id']);
+        if(isset($params['id'])){
+            $blog -> where('id', '=', $params['id']);
         }
         $response['blogData'] = $blog->get();
         return $response;

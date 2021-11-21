@@ -18,3 +18,7 @@ require('./src/components/Index');
 require('./src/components/Blog');
 require('./src/components/Admin');
 require('./src/components/Author');
+require('./src/components/Register');
+require('./src/components/Login');
+require('./components/Sandbox');
+require('./components/MainPage');

@@ -18,8 +18,13 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->mediumText('content');
             $table->string('status', 50);
+            $table->integer('comment_id')
+                  ->unsigned()
+                  ->nullable();
             $table->timestamps();
-        });
+            $table->foreign('comment_id')
+                  ->references('id')->on('comments_tbl');
+        });        
     }
 
     /**

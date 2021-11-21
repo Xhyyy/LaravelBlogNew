@@ -23,3 +23,8 @@ Route::prefix('blog')->group(function () {
     Route::post('/showBlog', 'PostController@showBlogs');
     Route::post('/destroy', 'PostController@destroy');
 });
+
+Route::prefix('user')->group(function () {
+    Route::post('/registerUser', 'LoginController@createUser');
+    Route::post('/loginUser', 'LoginController@loginUser');
+});

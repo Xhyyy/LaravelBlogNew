@@ -16,6 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'PagesController@blog');
 Route::get('/admin', 'PagesController@admin');
 Route::get('/author', 'PagesController@author');
+Route::get('/register-page', 'PagesController@register');
+Route::get('/login-page', 'PagesController@login');
+
+Route::get('/sandbox', function() {
+    return view('sandbox');
+});
+
+Route::get('/user', function() {
+    return \Auth::user();
+});
 // Route::get('/blog', 'PagesController@blog');
 // Route::get('/edit', 'PagesController@edit');
 // Route::resource('posts', 'PostController');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

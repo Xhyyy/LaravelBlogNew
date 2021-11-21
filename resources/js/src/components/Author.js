@@ -156,9 +156,7 @@ const Author = () => {
             </Button>
             <Grid item xs={12} sm={6} md={4}>
               {
-                blog.length == 0 ?
-                  ''
-                  :
+                blog && 
                   blog.map((datas) => {
                     return (
                       <Card className={classes.card} key={datas.id} >
