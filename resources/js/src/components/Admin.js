@@ -348,7 +348,7 @@ const Admin = () => {
       <Box margin={'20px'}>
         <Grid container spacing={3}>
           <Grid item md={6}>
-            <Typography variant="h5">BLOGS</Typography>
+            <Typography variant="h3">BLOGS</Typography>
             <Typography variant="h6">PUBLISHED BLOGS</Typography>
             <div style={{ width: '100%' }}>
               <DataGrid
@@ -390,7 +390,7 @@ const Admin = () => {
             </div>
           </Grid>
           <Grid item md={6}>
-            <Typography variant="h5">AUTHORS</Typography>
+            <Typography variant="h3">AUTHORS</Typography>
 
             <div style={{ width: '100%' }}>
               <DataGrid
