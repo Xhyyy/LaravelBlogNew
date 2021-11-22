@@ -8,7 +8,7 @@ use App\User;
 
 class LoginController extends Controller
 {
-    protected $redirectTo = '/author';
+    protected $redirectTo = 'pages.author';
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -25,8 +25,6 @@ class LoginController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
-
-
 
     public function createUser(Request $request)
     {
@@ -68,7 +66,7 @@ class LoginController extends Controller
             //     ->where('status', '=', 'enabled')
             //     ->get();
 
-            $userData = User::where('email','=', $params['email'])->first();
+            $userData = User::where('email','=', $params['email'])->where('status', '=', 'enabled')->first();
             $checkDetails = Hash::check($params['password'], $userData->password);
             
             if($checkDetails) {
@@ -83,6 +81,37 @@ class LoginController extends Controller
         }else {
             $response['code'] = 400;
             $response['message'] = 'Empty fields not allowed.';
+        }
+        return $response;
+    }
+
+    public function showUsers(Request $request)
+    {
+        
+        $params = $request -> all();
+        $select = [
+            'id',
+            'name',
+            'email',
+            'role',
+            'status'
+        ];
+        $usersList = User::select($select)->orderBy('name', 'ASC');
+        if(isset($params['id'])){
+            $usersList -> where('id', '=', $params['id']);
+        }
+        $response['data'] = $usersList->get();
+        return $response;
+    }
+
+    public function updateUser(Request $request)
+    {
+        $params = $request -> all();
+        if(isset($params['id'])) {
+            $id = $params ['id'];
+            $user = User::whereId($id)->update($params);
+            $response['message'] = 'User ' . $params['status'];
+            $response['code'] = 200;
         }
         return $response;
     }

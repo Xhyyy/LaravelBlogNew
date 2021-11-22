@@ -26,6 +26,7 @@ Route::get('/sandbox', function() {
 Route::get('/user', function() {
     return \Auth::user();
 });
+
 // Route::get('/blog', 'PagesController@blog');
 // Route::get('/edit', 'PagesController@edit');
 // Route::resource('posts', 'PostController');

@@ -1,258 +1,418 @@
-import { makeStyles, Box, Grid, Typography, Card, CardActionArea, CardContent, CardActions, Button } from '@material-ui/core';
+import { makeStyles, Box, Grid, Typography, Button } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import ReactDOM from 'react-dom';
 import api from '../api'
 
-
 const useStyles = makeStyles((theme) => ({
-    hero: {
-        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.pexels.com/photos/4301252/pexels-photo-4301252.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")',
-        height: "500px",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "#fff",
-        fontSize: "4rem",
-        marginBottom: 50,
-        [theme.breakpoints.down("sm")]: {
-            height: 300,
-            fontSize: "3em"
-        }
-    },
-    blogsContainer: {
-        paddingTop: theme.spacing(3),
-    },
-    card: {
-        maxWidth: "100%",
-        marginTop: theme.spacing(3),
-        width: '100vw',
-    },
-    cardActions: {
-        display: "flex",
-        margin: "0 10px",
-        justifyContent: "space-between"
-    },
-    author: {
-        display: "flex"
-    },
-    paginationContainer: {
-        display: "flex",
-        justifyContent: "center"
-    },
-    titleRoot: {
-        margin: 0,
-        padding: theme.spacing(2),
-    },
-    closeButton: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        color: theme.palette.grey[500],
-    },
-    contentRoot: {
-        padding: theme.spacing(2),
-    },
-    actionRoot: {
-        margin: 0,
-        padding: theme.spacing(1),
+  hero: {
+    backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.pexels.com/photos/4301252/pexels-photo-4301252.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")',
+    height: "150px",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#fff",
+    fontSize: "4rem",
+    marginBottom: 50,
+    [theme.breakpoints.down("sm")]: {
+      height: 300,
+      fontSize: "3em"
     }
+  }
 }));
 
 const Admin = () => {
-    const classes = useStyles();
-    const [blog, setBlog] = useState([]);
-    const [showChanges, setShowChanges] = useState('');
+  const classes = useStyles();
+  // const [blog, setBlog] = useState([]);
+  const [adminBlogsList, setAdminBlogsList] = useState([]);
+  const [adminUsersList, setAdminUsersList] = useState([]);
+  const [adminUnpublishedBlogs, setAdminUnpublishedBlogs] = useState([]);
+  const [adminDeletedBlogs, setadminDeletedBlogs] = useState([]);
+  const [showChanges, setShowChanges] = useState('');
 
-    const columns = [        
-        {
-            field: 'title',
-            headerName: 'Blog Title',
-            flex: 1,
-            editable: false,
-        },
-        {
-            field: 'content',
-            headerName: 'Blog Content',
-            flex: 1,
-            editable: false,
-        },
-        {
-            field: 'status',
-            headerName: 'Status',
-            flex: 1,
-            editable: false,
-        },
-        {
-            field: 'created_at',
-            headerName: 'Publish Date',
-            flex: 1,
-            editable: false,
-        },
-        {
-            field: 'updated_at',
-            headerName: 'Update Date',
-            flex: 1,
-            editable: false,
-        },
-        {
-            field: 'id',
-            flex: 1,
-            renderCell: (params) => {
-                console.log('------thhe params', params.row);
-                return (
-                    <div>
-                        <Box className={classes.deleteButton}>
-                            <Button
-                                variant="outlined"
-                                size='small'
-                                color='secondary'
-                                onClick={() => deleteBlog(params.row)}
-                            >
-                                Delete
-                            </Button>
-                        </Box>
-                        <Box className={classes.unpublishButton}>
-                            <Button
-                                variant="outlined"
-                                size='small'
-                                color='secondary'
-                                onClick={() => unpublishBlog(params.row)}
-                            >
-                                Unpublish
-                            </Button>
-                        </Box>                    
-                    </div >
-              )
-          }
-        },
-      ];
+  const adminBlogsListsColumns = [
+    {
+      field: 'title',
+      headerName: 'Blog Title',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'content',
+      headerName: 'Blog Content',
+      flex: 1,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'created_at',
+      headerName: 'Publish Date',
+      flex: 0.5,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'updated_at',
+      headerName: 'Update Date',
+      flex: 0.5,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'Actions',
+      flex: 1,
+      renderCell: (params) => {
+        // console.log('------the params', params.row);
+        return (
+          <div>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => deleteBlog(params.row)}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => unpublishBlog(params.row)}
+            >
+              Unpublish
+            </Button>
+          </div >
+        )
+      }
+    },
+  ];
 
-const blogPost = async () => {
-    const result = await api.post('api/blog/showBlog');
+  const adminUnpublishedBlogsListColumns = [
+    {
+      field: 'title',
+      headerName: 'Blog Title',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'content',
+      headerName: 'Blog Content',
+      flex: 1,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'created_at',
+      headerName: 'Publish Date',
+      flex: 0.5,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'updated_at',
+      headerName: 'Update Date',
+      flex: 0.5,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'Actions',
+      flex: 1,
+      renderCell: (params) => {
+        // console.log('------the params', params.row);
+        return (
+          <div>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => deleteBlog(params.row)}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => publishBlog(params.row)}
+            >
+              Publish
+            </Button>
+          </div >
+        )
+      }
+    },
+  ];
+
+  const adminDeletedBlogsListColumns = [
+    {
+      field: 'title',
+      headerName: 'Blog Title',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'content',
+      headerName: 'Blog Content',
+      flex: 1,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'Actions',
+      flex: 1,
+      renderCell: (params) => {
+        // console.log('------the params', params.row);
+        return (
+          <div>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => publishBlog(params.row)}
+            >
+              Restore
+            </Button>
+          </div >
+        )
+      }
+    },
+  ];
+
+  const adminUsersListColumn = [
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      editable: false
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      flex: 1,
+      editable: false
+    },
+    {
+      field: 'role',
+      headerName: 'Role',
+      flex: 1,
+      editable: false
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+      editable: false
+    },
+    {
+      field: 'Actions',
+      flex: 1,
+      renderCell: (params) => {
+        // console.log('------the params', params.row);
+        return (
+          <div>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => disableUser(params.row)}
+            >
+              Disable
+            </Button>
+          </div >
+        )
+      }
+    },
+  ];
+
+
+  const adminBlogPost = async () => {
+    const result = await api.post('api/blog/adminShowBlog');
     if (result.status == 200) {
-        setBlog(result.data.blogData);
+      setAdminBlogsList(result.data.blogData);
     }
-}
+  }
 
-const deleteBlog = async (data) => {
+  const unpublishedBlogPosts = async () => {
+    const result = await api.post('api/blog/adminShowUnpublishedBlogs');
+    if(result.status == 200) {
+      setAdminUnpublishedBlogs(result.data.blogData);
+    }
+  }
+
+  const deletedBlogPosts = async () => {
+    const result = await api.post('api/blog/showDeletedBlogs');
+    if(result.status == 200) {
+      setadminDeletedBlogs(result.data.blogData);
+    }
+  }
+
+  const deleteBlog = async (data) => {
     setShowChanges('...Delete on Process');
     const dataToDelete = {
-        id: data.id,
-        status: 'deleted'
+      id: data.id,
+      status: 'deleted'
     }
     const response = await api.post('api/blog/addOrUpdate', dataToDelete);
     if (response.status == 200 && response.data.code == 200) {
-        setShowChanges('Deleted');
-        alert(response.data.message);
+      setShowChanges('Deleted');
+      alert(response.data.message);
     } else {
-        alert('ERROR!');
+      alert('ERROR!');
     }
-}
+  }
 
-const unpublishBlog = async (data) => {
+  const publishBlog = async (data) => {
+    setShowChanges('...Please wait');
+    const dataToPublish = {
+      id: data.id,
+      status: 'published'
+    }
+    const response = await api.post('api/blog/addOrUpdate', dataToPublish);
+    if (response.status == 200 && response.data.code == 200) {
+      setShowChanges('Published');
+      alert(response.data.message);
+    } else {
+      alert('ERROR!');
+    }
+  }
+
+  const unpublishBlog = async (data) => {
     setShowChanges('...Please wait');
     const dataToUnpublish = {
-        id: data.id,
-        status: 'unpublish'
+      id: data.id,
+      status: 'unpublish'
     }
     const response = await api.post('api/blog/addOrUpdate', dataToUnpublish);
     if (response.status == 200 && response.data.code == 200) {
-        setShowChanges('Unpblished');
-        alert(response.data.message);
+      setShowChanges('Unpblished');
+      alert(response.data.message);
     } else {
-        alert('ERROR!');
+      alert('ERROR!');
     }
-}
+  }
 
-useEffect(() => {
-    blogPost();
-}, [showChanges]);
+  const adminShowUsers = async () => {
+    const result = await api.post('api/user/showUser');
+    if (result.status == 200) {
+      setAdminUsersList(result.data.data);
+    }
+  }
 
-return (
-    <Box margin={'20px'}>
+  const disableUser = async (data) => {
+    setShowChanges('...Please wait');
+    const statusToSend = {
+      id: data.id,
+      status: 'disabled'
+    }
+    const response = await api.post('api/user/updateUser', statusToSend);
+    if (response.status == 200 && response.data.code == 200) {
+      setShowChanges('User Disabled');
+      alert(response.data.message);
+    } else {
+      alert('ERROR');
+    }
+  }
+
+  useEffect(() => {
+    adminBlogPost();
+    adminShowUsers();
+    unpublishedBlogPosts();
+    deletedBlogPosts();
+  }, [showChanges]);
+
+  return (
+    <div>
+      <Box className={classes.hero}>
+        <Box>Admin Page</Box>
+      </Box>
+      <Box margin={'20px'}>
         <Grid container spacing={3}>
-            <Grid item md={6}>
-                <Typography variant="h5">BLOGS</Typography>
-
-            <div style={{ height: 400, width: '100%' }}>
-            <DataGrid
-                rows={blog}
-                columns={columns}
+          <Grid item md={6}>
+            <Typography variant="h5">BLOGS</Typography>
+            <Typography variant="h6">PUBLISHED BLOGS</Typography>
+            <div style={{ width: '100%' }}>
+              <DataGrid
+                rows={adminBlogsList}
+                columns={adminBlogsListsColumns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-            />
+                autoHeight={true}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+              />
             </div>
+            <Typography variant="h6">UNPUBLISHED BLOGS</Typography>
+            <div stylele={{ width: '100%' }}>
+              <DataGrid
+                  rows={adminUnpublishedBlogs}
+                  columns={adminUnpublishedBlogsListColumns}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  autoHeight={true}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                />
+            </div>
+            <Typography variant="h6">DELETED BLOGS</Typography>
+            <div stylele={{ width: '100%' }}>
+              <DataGrid
+                  rows={adminDeletedBlogs}
+                  columns={adminDeletedBlogsListColumns}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  autoHeight={true}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                />
+            </div>
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h5">AUTHORS</Typography>
 
-
-                {
-                    blog.length == 0 ? '' :
-                        blog.map((datas) => {
-                            return (
-                                <Card className={classes.card} key={datas.id} >
-                                    <CardActionArea>
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="h2" color="primary">
-                                                {datas.title}
-                                            </Typography>
-                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                {datas.content}
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                    <CardActions className={classes.cardActions}>
-                                        <Box display='flex' flexDirection='column'>
-                                            <Box className={classes.author}>
-                                                <Box>
-                                                    <Typography variant="subtitle2" component="p">
-                                                        By: Jane Doe
-                                                    </Typography>
-                                                    <Typography variant="subtitle2" color="textSecondary" component="p">
-                                                        Published Date: {datas.created_at}
-                                                    </Typography>
-                                                </Box>
-                                            </Box>
-                                            <Box className={classes.deleteButton}>
-                                                <Button
-                                                    variant="outlined"
-                                                    size='small'
-                                                    color='secondary'
-                                                    onClick={() => deleteBlog(datas)}
-                                                >
-                                                    Delete
-                                                </Button>
-                                            </Box>
-                                            <Box className={classes.unpublishButton}>
-                                                <Button
-                                                    variant="outlined"
-                                                    size='small'
-                                                    color='secondary'
-                                                    onClick={() => unpublishBlog(datas)}
-                                                >
-                                                    Unpublish
-                                                </Button>
-                                            </Box>
-                                        </Box>
-                                    </CardActions>
-                                </Card>
-                            );
-                        })
-                }
-            </Grid>
-            <Grid item md={6}>
-                <Typography variant="h5">AUTHORS</Typography>
-            </Grid>
+            <div style={{ width: '100%' }}>
+              <DataGrid
+                rows={adminUsersList}
+                columns={adminUsersListColumn}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                autoHeight={true}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+              />
+            </div>
+          </Grid>
         </Grid>
-    </Box>
-);
+      </Box>
+    </div>
+  );
 }
 
 export default Admin;
 
 if (document.getElementById('admin')) {
-    ReactDOM.render(<Admin />, document.getElementById('admin'));
+  ReactDOM.render(<Admin />, document.getElementById('admin'));
 }

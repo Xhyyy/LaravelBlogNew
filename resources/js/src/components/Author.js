@@ -2,11 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import api from '../api';
-import { Dialog, DialogTitle, DialogContent, ButtonBase } from '@material-ui/core'
-import { makeStyles, Button, IconButton, Typography, Box, Grid, Card, CardActionArea, CardActions, CardContent } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
+import { makeStyles, Button, IconButton, Typography, Box, Grid } from '@material-ui/core';
 import { HighlightOff } from '@material-ui/icons';
 import Add from './Add';
 import Edit from './Edit';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 const useStyles = makeStyles((theme) => ({
   hero: {
@@ -66,10 +67,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
 const Author = () => {
   const classes = useStyles();
   const [blog, setBlog] = useState([]);
+  const [unpublishedBlogs, setUnpublishedBlogs] = useState([]);
   const [open, setOpen] = useState(false);
   const [showChanges, setShowChanges] = useState('');
   // const [id, setId] = useState();
@@ -78,8 +79,132 @@ const Author = () => {
   const [blogId, setBlogId] = useState(0);
   const [openEdit, setOpenEdit] = useState(false);
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  // const [title, setTitle] = useState('');
+  // const [content, setContent] = useState('');
+
+  const authorBlogsListColumns = [
+    {
+      field: 'title',
+      headerName: 'Blog Title',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'content',
+      headerName: 'Blog Content',
+      flex: 1,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'created_at',
+      headerName: 'Publish Date',
+      flex: 0.5,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'updated_at',
+      headerName: 'Update Date',
+      flex: 0.5,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'Actions',
+      flex: 1,
+      renderCell: (params) => {
+        // console.log('------the params', params.row);
+        return (
+          <div>
+            <Button
+              variant="outlined"
+              size='small'
+              color='primary'
+              onClick={() => handleEditDialog(params.row)}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => unpublishBlog(params.row)}
+            >
+              Unpublish
+            </Button>
+          </div >
+        )
+      }
+    },
+  ];
+
+  const authorUnpublishedBlogsListColumns = [
+    {
+      field: 'title',
+      headerName: 'Blog Title',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'content',
+      headerName: 'Blog Content',
+      flex: 1,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 0.5,
+      editable: false,
+    },
+    {
+      field: 'created_at',
+      headerName: 'Publish Date',
+      flex: 0.5,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'updated_at',
+      headerName: 'Update Date',
+      flex: 0.5,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'Actions',
+      flex: 1,
+      renderCell: (params) => {
+        // console.log('------the params', params.row);
+        return (
+          <div>
+            <Button
+              variant="outlined"
+              size='small'
+              color='primary'
+              onClick={() => handleEditDialog(params.row)}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => publishBlog(params.row)}
+            >
+              Publish
+            </Button>
+          </div >
+        )
+      }
+    },
+  ];
 
   const handleEditDialog = (data) => {
     console.log(data);
@@ -108,15 +233,22 @@ const Author = () => {
     }
   }
 
-  const deleteBlog = async (data) => {
-    setShowChanges('...Delete on Process');
-    const dataToDelete = {
-      id: data.id,
-      status: 'deleted'
+  const authorShowUnpublishedBlogs = async () => {
+    const result = await api.post('api/blog/authorShowUnpublishedBlogs');
+    if(result.status == 200) {
+      setUnpublishedBlogs(result.data.blogData);
     }
-    const response = await api.post('api/blog/addOrUpdate', dataToDelete);
+  }
+  
+  const publishBlog = async (data) => {
+    setShowChanges('...Please wait');
+    const dataToPublish = {
+      id: data.id,
+      status: 'published'
+    }
+    const response = await api.post('api/blog/addOrUpdate', dataToPublish);
     if (response.status == 200 && response.data.code == 200) {
-      setShowChanges('Deleted');
+      setShowChanges('Published');
       alert(response.data.message);
     } else {
       alert('ERROR!');
@@ -140,6 +272,7 @@ const Author = () => {
 
   useEffect(() => {
     blogPost();
+    authorShowUnpublishedBlogs();
   }, [openEdit, open, showChanges]);
 
   return (
@@ -147,85 +280,45 @@ const Author = () => {
       <Box className={classes.hero}>
         <Box>Author Page</Box>
       </Box>
-      {/* <Container maxWidth="lg" className={classes.blogsContainer}> */}
-      <Grid container spacing={3}>
-        <Box>
-          <Box display='flex'>
+
+      <Box margin={'20px'}>
+        <Grid container spacing={3}>
+          <Grid item md={6}>
+            <Typography variant="h5">Published Blogs</Typography>
             <Button variant="outlined" color="primary" onClick={handleClickOpen} size='medium' style={{ maxHeight: '50px' }}>
               ADD NEW BLOG
             </Button>
-            <Grid item xs={12} sm={6} md={4}>
-              {
-                blog && 
-                  blog.map((datas) => {
-                    return (
-                      <Card className={classes.card} key={datas.id} >
-                        <CardActionArea>
-                          <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2" color="primary">
-                              {datas.title}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                              {datas.content}
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <CardActions className={classes.cardActions}>
-                          <Box display='flex' flexDirection='column'>
-                            <Box className={classes.author}>
-                              <Box>
-                                <Typography variant="subtitle2" component="p">
-                                  By: Jane Doe
-                                </Typography>
-                                <Typography variant="subtitle2" color="textSecondary" component="p">
-                                  Published Date: {datas.created_at}
-                                </Typography>
-                              </Box>
-                            </Box>
-                            <Box display='flex' flexDirection='row'>
-                              <Box className={classes.editButton}>
-                                <Button
-                                  variant="outlined"
-                                  size='small'
-                                  color='primary'
-                                  onClick={() => handleEditDialog(datas)}
-                                >
-                                  Edit
-                                </Button>
-                              </Box>
-                              <Box className={classes.deleteButton}>
-                                <Button
-                                  variant="outlined"
-                                  size='small'
-                                  color='secondary'
-                                  onClick={() => deleteBlog(datas)}
-                                >
-                                  Delete
-                                </Button>
-                              </Box>
-                              <Box className={classes.unpublishButton}>
-                                <Button
-                                  variant="outlined"
-                                  size='small'
-                                  color='secondary'
-                                  onClick={() => unpublishBlog(datas)}
-                                >
-                                  Unpublish
-                                </Button>
-                              </Box>
-                            </Box>
-                          </Box>
-                        </CardActions>
-                      </Card>
-                    );
-                  })
-              }
-            </Grid>
-          </Box>
+            <div stylele={{ width: '100%' }}>
+              <DataGrid
+                rows={blog}
+                columns={authorBlogsListColumns}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                autoHeight={true}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+              />
+            </div>
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h5">Unpublished Blogs</Typography>
+            <div stylele={{ width: '100%' }}>
+              <DataGrid
+                  rows={unpublishedBlogs}
+                  columns={authorUnpublishedBlogsListColumns}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  autoHeight={true}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                />
+            </div>
+          </Grid>
+        </Grid>
+      </Box>
 
-        </Box>
-      </Grid>
-      {/* </Container> */}
       <Box>
         <Dialog onClose={handleClose} open={open}>
           <Box>

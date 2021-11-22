@@ -21,10 +21,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('blog')->group(function () {
     Route::post('/addOrUpdate', 'PostController@storeOrUpdate');
     Route::post('/showBlog', 'PostController@showBlogs');
+    Route::post('/authorShowUnpublishedBlogs', 'PostController@authorShowUnpublishedBlogs');
+    Route::post('/adminShowBlog', 'PostController@adminShowBlogs');
+    Route::post('/adminShowUnpublishedBlogs', 'PostController@adminShowUnpublishedBlogs');
+    Route::post('/showDeletedBlogs', 'PostController@showDeletedBlogs');
     Route::post('/destroy', 'PostController@destroy');
 });
 
 Route::prefix('user')->group(function () {
     Route::post('/registerUser', 'LoginController@createUser');
     Route::post('/loginUser', 'LoginController@loginUser');
+    Route::post('/showUser', 'LoginController@showUsers');
+    Route::post('/updateUser', 'LoginController@updateUser');
 });

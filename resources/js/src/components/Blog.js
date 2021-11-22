@@ -148,10 +148,10 @@ const Blog = () => {
         <Box>Blog Page</Box>
       </Box>
       <Container>
+        <Button variant="outlined" color="primary" onClick={handleClickOpen} size='medium' style={{ maxHeight: '50px' }}>
+          ADD NEW BLOG
+        </Button>
         <Grid container spacing={3}>
-          <Button variant="outlined" color="primary" onClick={handleClickOpen} size='medium' style={{ maxHeight: '50px' }}>
-              ADD NEW BLOG
-          </Button>
           {
             blog.length == 0 ? '' :
               blog.map((datas) => {
@@ -219,8 +219,46 @@ const Blog = () => {
                 );
               })
           }
-          
         </Grid>
+
+        <Box>
+        <Dialog onClose={handleClose} open={open}>
+          <Box>
+            <DialogTitle onClose={handleClose}>
+              <IconButton onClick={handleClose}>
+                <HighlightOff />
+              </IconButton>
+              <Box flexGrow={1} />
+              Add New Blog Post
+            </DialogTitle>
+          </Box>
+          <DialogContent>
+            <Add 
+              handleClose={handleClose}
+            />
+          </DialogContent>
+        </Dialog>
+
+        <Dialog onClose={handleCloseEdit} open={openEdit}>
+          <Box>
+            <DialogTitle onClose={handleCloseEdit}>
+              <IconButton onClick={handleCloseEdit}>
+                <HighlightOff />
+              </IconButton>
+              <Box flexGrow={1} />
+              Edit {blogTitle}
+            </DialogTitle>
+          </Box>
+          <DialogContent>
+            <Edit
+              blogTitle={blogTitle}
+              blogContent={blogContent}
+              blogId={blogId}
+              handleClose={handleCloseEdit}
+            />
+          </DialogContent>
+        </Dialog>
+      </Box>
       </Container>
     </div>
   );

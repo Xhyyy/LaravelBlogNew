@@ -39,11 +39,6 @@ class PostController extends Controller
         return $response;
 
     }
-    public function show($id)
-    {
-        $result = Post::find($id);
-        return $result;
-    }
 
     public function showBlogs(Request $request)
     {
@@ -64,4 +59,79 @@ class PostController extends Controller
         return $response;
     }
 
+    public function adminShowBlogs(Request $request)
+    {
+        $params = $request -> all();
+        $select = [
+            'id',
+            'title',
+            'content',
+            'created_at',
+            'updated_at',
+            'status',
+        ];
+        $blogList = Post::select($select)->orderBy('created_at', 'ASC')->where('status', '=', 'published');
+        if(isset($params['id'])){
+            $blogList -> where('id', '=', $params['id']);
+        }
+        $response['blogData'] = $blogList->get();
+        return $response;
+    }
+
+    public function authorShowUnpublishedBlogs(Request $request)
+    {
+        $params = $request -> all();
+        $select = [
+            'id',
+            'title',
+            'content',
+            'created_at',
+            'updated_at',
+            'status',
+        ];
+        $blog = Post::select($select)->orderBy('id', 'DESC')->where('status', '=', 'unpublish');
+        if(isset($params['id'])){
+            $blog -> where('id', '=', $params['id']);
+        }
+        $response['blogData'] = $blog->get();
+        return $response;
+    }
+
+    public function adminShowUnpublishedBlogs(Request $request)
+    {
+        $params = $request -> all();
+        $select = [
+            'id',
+            'title',
+            'content',
+            'created_at',
+            'updated_at',
+            'status',
+        ];
+        $blog = Post::select($select)->orderBy('id', 'DESC')->where('status', '=', 'unpublish');
+        if(isset($params['id'])){
+            $blog -> where('id', '=', $params['id']);
+        }
+        $response['blogData'] = $blog->get();
+        return $response;
+    }
+
+    public function showDeletedBlogs(Request $request)
+    {
+        $params = $request -> all();
+        $select = [
+            'id',
+            'title',
+            'content',
+            'created_at',
+            'updated_at',
+            'status',
+        ];
+        $blog = Post::select($select)->orderBy('id', 'DESC')->where('status', '=', 'deleted');
+        if(isset($params['id'])){
+            $blog -> where('id', '=', $params['id']);
+        }
+        $response['blogData'] = $blog->get();
+        return $response;
+    }
 }
