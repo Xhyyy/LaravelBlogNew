@@ -391,7 +391,20 @@ const Admin = () => {
           </Grid>
           <Grid item md={6}>
             <Typography variant="h3">AUTHORS</Typography>
-
+            <Typography variant="h6">ACTIVE USERS</Typography>
+            <div style={{ width: '100%' }}>
+              <DataGrid
+                rows={adminUsersList}
+                columns={adminUsersListColumn}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                autoHeight={true}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+              />
+            </div>
+            <Typography variant="h6">DISABLED USERS</Typography>
             <div style={{ width: '100%' }}>
               <DataGrid
                 rows={adminUsersList}
