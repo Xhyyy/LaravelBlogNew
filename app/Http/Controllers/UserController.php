@@ -69,6 +69,7 @@ class UserController extends Controller
                 $user = User::where('email','=',$request->email)->first();
                 Auth::login($user);
                 // $checkDetails = Hash::check($params['password'], $user->password);
+                
                 $response['code'] = 200;
                 $response['message'] = 'Login Successfuly';
                 $response['user'] = \Auth::user();
