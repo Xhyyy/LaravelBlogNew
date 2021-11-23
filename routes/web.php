@@ -17,7 +17,7 @@ Route::get('/', 'PagesController@blog');
 Route::middleware('auth')->group(function () {
     Route::get('/admin', 'PagesController@admin');
     Route::get('/author', 'PagesController@author');
-    Route::get('/landing-page', 'PagesController@landingPage');
+    Route::get('/home-page', 'PagesController@landingPage');
 });
 Route::get('/register-page', 'PagesController@register');
 Route::get('/login-page', 'PagesController@login');

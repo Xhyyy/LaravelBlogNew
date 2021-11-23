@@ -11,11 +11,27 @@ class PagesController extends Controller
     }
 
     public function admin(){
-        return view('pages.admin');
+        $userData = collect(\Auth::user())->map(function($data){
+            return $data;
+        });
+
+        if($userData['role'] == 'admin') {
+            return view('pages.admin');
+        }else {
+            abort(404);
+        }
     }
 
     public function author(){
-        return view('pages.author');
+        $userData = collect(\Auth::user())->map(function($data){
+            return $data;
+        });
+        session(['user_id'=>$userData['id']]);
+        if($userData['role'] == 'author') {
+            return view('pages.author');
+        }else {
+            abort(404);
+        }
     }
 
     public function register(){
@@ -27,6 +43,13 @@ class PagesController extends Controller
     }
 
     public function landingPage(){
-        return \Auth::user();
+        $userData = collect(\Auth::user())->map(function($data){
+            return $data;
+        });
+       if($userData['role'] == 'admin'){
+            return view('pages.admin');
+       }else{
+            return view('pages.author');
+       }
     }
 }

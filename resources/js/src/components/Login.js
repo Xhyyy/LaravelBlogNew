@@ -17,7 +17,7 @@ const Login = () => {
     const response = await api.post('/login', data);
     if (response.data.code == 200) {
       console.log('Success', response.data.user);
-      window.location.href = '/author'
+      window.location.href = '/home-page'
     } else {
       console.log(response.data.message);
     }

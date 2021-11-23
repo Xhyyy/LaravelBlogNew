@@ -42,16 +42,21 @@ class PostController extends Controller
 
     public function showBlogs(Request $request)
     {
+        $userData = collect(\Auth::user())->map(function($data){
+            return $data;
+        });
         $params = $request -> all();
         $select = [
-            'id',
+            'posts.id',
             'title',
             'content',
-            'created_at',
-            'updated_at',
-            'status',
+            'posts.created_at',
+            'posts.updated_at',
+            'posts.status',
         ];
-        $blog = Post::select($select)->orderBy('id', 'DESC')->where('status', '=', 'published');
+        $blog = Post::select($select)->orderBy('id', 'DESC')->where('posts.status', '=', 'published')
+        // ->where('user_id','=',$userData['id'])
+        ->join('users','users.id','=','posts.user_id');
         if(isset($params['id'])){
             $blog -> where('id', '=', $params['id']);
         }
@@ -80,6 +85,9 @@ class PostController extends Controller
 
     public function authorShowUnpublishedBlogs(Request $request)
     {
+        $userData = collect(\Auth::user())->map(function($data){
+            return $data;
+        });
         $params = $request -> all();
         $select = [
             'id',

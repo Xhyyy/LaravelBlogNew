@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '10px'
   },
   registerButton: {
+    margin: '0 10px'
+  },
+  logoutButton: {
     marginLeft: '10px'
   },
   hero: {
@@ -58,6 +61,14 @@ const Header = () => {
           <Link href="http://myblog.com/register-page" className={classes.registerButton}>
             <Typography color="primary">
               Register
+            </Typography>
+          </Link>
+          <Typography color="primary">
+              |
+            </Typography>
+          <Link href="http://myblog.com/logout-page" className={classes.logoutButton}>
+            <Typography color="primary">
+              Logout
             </Typography>
           </Link>
         </Toolbar>
