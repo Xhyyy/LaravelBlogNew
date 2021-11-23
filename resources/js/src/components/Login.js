@@ -1,90 +1,80 @@
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
-import { makeStyles, Box, TextField, Grid, Button } from '@material-ui/core';
+import { TextField, Grid, Button, Paper } from '@material-ui/core';
 import api from '../api';
-import { Container } from '@mui/material';
-
-const useStyles = makeStyles((theme) => ({
-  hero: {
-    backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.pexels.com/photos/4301252/pexels-photo-4301252.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")',
-    height: '200px',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#fff',
-    fontSize: '4rem',
-    marginBottom: 50,
-    [theme.breakpoints.down('sm')]: {
-      height: 300,
-      fontSize: '3em'
-    }
-  }
-}));
+import { Avatar, Container, Link, Typography } from '@mui/material';
+import { LockOutlined } from '@material-ui/icons';
 
 const Login = () => {
-  const classes = useStyles();
+  const paperStyle={padding:20, height:'70vh', width:280, margin:"20px auto"}
+  const avatarStyle={backgroundColor:'#3370bd'}
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const LoginUser = async(data) => {
-    console.log('---->',data);
-    const response = await api.post('api/user/loginUser', data);
+  const LoginUser = async (data) => {
+    console.log('---->', data);
+    const response = await api.post('/login', data);
     if (response.data.code == 200) {
-      console.log(response.data.message);
-    }else {
+      console.log('Success', response.data.user);
+      window.location.href = '/author'
+    } else {
       console.log(response.data.message);
     }
   };
 
   return (
     <div>
-      <Box className={classes.hero}>
-        <Box>Login</Box>
-      </Box>
       <Container>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <TextField 
+        <Grid>
+          <Paper elevation={10} style={paperStyle}>
+            <Grid align='center'>
+              <Avatar style={avatarStyle}><LockOutlined /></Avatar>
+              <Typography variant='h4' style={{ marginBottom: 20 }}>Login</Typography>
+            </Grid>
+
+            <TextField
               value={email}
               variant='outlined'
               type='email'
-              placeholder='Email' 
+              placeholder='Email'
+              style={{margin:'2px 0'}}
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField 
+            <TextField
               value={password}
               variant='outlined'
-              placeholder='Password' 
+              placeholder='Password'
               type='password'
-              onChange={(e) => setPassword(e.target.value)}            
+              style={{margin:'2px 0'}}
+              onChange={(e) => setPassword(e.target.value)}
               fullWidth
             />
-          </Grid>
-          <Grid item xs={12}>
             <Button
               variant='contained'
               color='primary'
               type='submit'
-              onClick={()=> LoginUser({
+              style={{margin:'2px 0'}}
+              fullWidth
+              onClick={() => LoginUser({
                 email: email,
                 password: password
               })}
             >
-                Login
+              Login
             </Button>
-          </Grid>
+            <Typography textAlign='center'>Dont have an account?
+              <Link href="/register-page">
+                <span style={{marginLeft:"4px"}}>Register</span> 
+              </Link>
+            </Typography>
+          </Paper>
         </Grid>
       </Container>
     </div>
   );
- 
+
 };
 export default Login;
 

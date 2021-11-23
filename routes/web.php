@@ -14,22 +14,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'PagesController@blog');
-Route::get('/admin', 'PagesController@admin');
-Route::get('/author', 'PagesController@author');
+Route::middleware('auth')->group(function () {
+    Route::get('/admin', 'PagesController@admin');
+    Route::get('/author', 'PagesController@author');
+    Route::get('/landing-page', 'PagesController@landingPage');
+});
 Route::get('/register-page', 'PagesController@register');
 Route::get('/login-page', 'PagesController@login');
+Route::get('/logout-page', 'UserController@logout');
 
 Route::get('/sandbox', function() {
     return view('sandbox');
 });
 
-Route::get('/user', function() {
+Route::get('/123', function() {
     return \Auth::user();
 });
-
-// Route::get('/blog', 'PagesController@blog');
-// Route::get('/edit', 'PagesController@edit');
-// Route::resource('posts', 'PostController');
+// Route::get('/user', 'UserController@index');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::post('/login', 'UserController@login');

@@ -1,114 +1,102 @@
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
-import { makeStyles, TextField, Grid, Button } from '@material-ui/core';
+import { TextField, Grid, Button, Paper } from '@material-ui/core';
 import api from '../api';
-import { Box } from '@mui/system';
-import { Container } from '@mui/material';
-
-const useStyles = makeStyles((theme) => ({
-  hero: {
-    backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.pexels.com/photos/4301252/pexels-photo-4301252.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")',
-    height: '200px',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#fff',
-    fontSize: '4rem',
-    marginBottom: 50,
-    [theme.breakpoints.down('sm')]: {
-      height: 300,
-      fontSize: '3em'
-    }
-  }
-}));
+import { Avatar, Container, Link, Typography } from '@mui/material';
+import { LockOutlined } from '@material-ui/icons';
 
 const Register = () => {
-  const classes = useStyles();
+  const paperStyle={padding:20, height:'70vh', width:280, margin:"20px auto"}
+  const avatarStyle={backgroundColor:'#3370bd'}
+  
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const registerUser = async(data) => {
-    console.log('asd123 ---->',data);
+  const registerUser = async (data) => {
+    console.log('data values ---->', data);
 
     const response = await api.post('api/user/registerUser', data);
     if (response.data.code == 200) {
       alert(response.data.message);
-    }else {
+    } else {
       alert(response.data.message);
     }
   };
 
   return (
     <div>
-      <Box className={classes.hero}>
-        <Box>Register</Box>
-      </Box>
       <Container>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <TextField 
+        <Grid>
+          <Paper elevation={10} style={paperStyle}>
+            <Grid align='center'>
+              <Avatar style={avatarStyle}><LockOutlined /></Avatar>
+              <Typography variant='h4' style={{marginBottom:20}}>Register</Typography>
+            </Grid>
+
+            <TextField
               value={name}
               variant='outlined'
-              placeholder='Name' 
+              placeholder='Name'
+              style={{margin:'2px 0'}}
               onChange={(e) => setName(e.target.value)}
               fullWidth
               required
+              
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField 
+            <TextField
               value={email}
               variant='outlined'
               type='email'
-              placeholder='Email' 
+              placeholder='Email'
+              style={{margin:'2px 0'}}
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField 
+            <TextField
               value={password}
               variant='outlined'
-              placeholder='Password' 
+              placeholder='Password'
               type='password'
+              style={{margin:'2px 0'}}
               onChange={(e) => setPassword(e.target.value)}
-              error={password != confirmPassword? true : false}
+              error={password != confirmPassword ? true : false}
               helperText={password != confirmPassword ? 'password dont match' : ''}
-                
+
               fullWidth
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField 
+            <TextField
               value={confirmPassword}
               variant='outlined'
               type='password'
-              placeholder='Confirm Password' 
+              placeholder='Confirm Password'
+              style={{margin:'2px 0'}}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              error={password != confirmPassword? true : false}
+              error={password != confirmPassword ? true : false}
               helperText={password != confirmPassword ? 'password dont match' : ''}
               fullWidth
-            />  
-          </Grid>
-          <Grid item xs={12}>
+            />
+
             <Button
               variant='contained'
               color='primary'
-              onClick={()=> registerUser({
+              style={{margin:'8px 0'}}
+              fullWidth
+              onClick={() => registerUser({
                 name: name,
                 email: email,
                 password: password
               })}
             >
-                Register
+              Register
             </Button>
-          </Grid>
+            <Typography textAlign='center'>Click Here to
+              <Link href="/login-page">
+                <span style={{marginLeft:"4px"}}>Login</span> 
+              </Link>
+            </Typography>
+          </Paper>
         </Grid>
       </Container>
     </div>

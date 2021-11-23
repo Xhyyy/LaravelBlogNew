@@ -29,8 +29,7 @@ Route::prefix('blog')->group(function () {
 });
 
 Route::prefix('user')->group(function () {
-    Route::post('/registerUser', 'LoginController@createUser');
-    Route::post('/loginUser', 'LoginController@loginUser');
-    Route::post('/showUser', 'LoginController@showUsers');
-    Route::post('/updateUser', 'LoginController@updateUser');
+    Route::post('/registerUser', 'UserController@registerUser');
+    Route::post('/showUser', 'UserController@showUsers');
+    Route::post('/updateUser', 'UserController@updateUser');
 });

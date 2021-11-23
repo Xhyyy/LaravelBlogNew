@@ -70,36 +70,6 @@ const useStyles = makeStyles((theme) => ({
 const Blog = () => {
   const classes = useStyles();
   const [blog, setBlog] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [showChanges, setShowChanges] = useState('');
-  // const [id, setId] = useState();
-  const [blogTitle, setBlogTitle] = useState('');
-  const [blogContent, setBlogContent] = useState('');
-  const [blogId, setBlogId] = useState(0);
-  const [openEdit, setOpenEdit] = useState(false);
-
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-
-  const handleEditDialog = (data) => {
-    console.log(data);
-    setBlogTitle(data.title);
-    setBlogContent(data.content);
-    setBlogId(data.id);
-    setOpenEdit(true);
-  };
-
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const blogPost = async () => {
     const result = await api.post('api/blog/showBlog');
@@ -108,39 +78,9 @@ const Blog = () => {
     }
   };
 
-  const deleteBlog = async (data) => {
-    setShowChanges('...Delete on Process');
-    const dataToDelete = {
-      id: data.id,
-      status: 'deleted'
-    };
-    const response = await api.post('api/blog/addOrUpdate', dataToDelete);
-    if (response.status == 200 && response.data.code == 200) {
-      setShowChanges('Deleted');
-      alert(response.data.message);
-    } else {
-      alert('ERROR!');
-    }
-  };
-
-  const unpublishBlog = async (data) => {
-    setShowChanges('...Please wait');
-    const dataToUnpublish = {
-      id: data.id,
-      status: 'unpublish'
-    };
-    const response = await api.post('api/blog/addOrUpdate', dataToUnpublish);
-    if (response.status == 200 && response.data.code == 200) {
-      setShowChanges('Unpblished');
-      alert(response.data.message);
-    } else {
-      alert('ERROR!');
-    }
-  };
-
   useEffect(() => {
     blogPost();
-  }, [openEdit, open, showChanges]);
+  }, []);
 
   return (
     <div>
@@ -148,9 +88,6 @@ const Blog = () => {
         <Box>Blog Page</Box>
       </Box>
       <Container>
-        <Button variant="outlined" color="primary" onClick={handleClickOpen} size='medium' style={{ maxHeight: '50px' }}>
-          ADD NEW BLOG
-        </Button>
         <Grid container spacing={3}>
           {
             blog.length == 0 ? '' :
@@ -173,43 +110,11 @@ const Blog = () => {
                           <Box className={classes.author}>
                             <Box>
                               <Typography variant="subtitle2" component="p">
-                                  By: Jane Doe
+                                By: Jane Doe
                               </Typography>
                               <Typography variant="subtitle2" color="textSecondary" component="p">
-                                  Published Date: {datas.created_at}
+                                Published Date: {datas.created_at}
                               </Typography>
-                            </Box>
-                          </Box>
-                          <Box display='flex' flexDirection='row'>
-                            <Box className={classes.editButton}>
-                              <Button
-                                variant="outlined"
-                                size='small'
-                                color='primary'
-                                onClick={() => handleEditDialog(datas)}
-                              >
-                                  Edit
-                              </Button>
-                            </Box>
-                            <Box className={classes.deleteButton}>
-                              <Button
-                                variant="outlined"
-                                size='small'
-                                color='secondary'
-                                onClick={() => deleteBlog(datas)}
-                              >
-                                  Delete
-                              </Button>
-                            </Box>
-                            <Box className={classes.unpublishButton}>
-                              <Button
-                                variant="outlined"
-                                size='small'
-                                color='secondary'
-                                onClick={() => unpublishBlog(datas)}
-                              >
-                                  Unpublish
-                              </Button>
                             </Box>
                           </Box>
                         </Box>
@@ -220,45 +125,6 @@ const Blog = () => {
               })
           }
         </Grid>
-
-        <Box>
-        <Dialog onClose={handleClose} open={open}>
-          <Box>
-            <DialogTitle onClose={handleClose}>
-              <IconButton onClick={handleClose}>
-                <HighlightOff />
-              </IconButton>
-              <Box flexGrow={1} />
-              Add New Blog Post
-            </DialogTitle>
-          </Box>
-          <DialogContent>
-            <Add 
-              handleClose={handleClose}
-            />
-          </DialogContent>
-        </Dialog>
-
-        <Dialog onClose={handleCloseEdit} open={openEdit}>
-          <Box>
-            <DialogTitle onClose={handleCloseEdit}>
-              <IconButton onClick={handleCloseEdit}>
-                <HighlightOff />
-              </IconButton>
-              <Box flexGrow={1} />
-              Edit {blogTitle}
-            </DialogTitle>
-          </Box>
-          <DialogContent>
-            <Edit
-              blogTitle={blogTitle}
-              blogContent={blogContent}
-              blogId={blogId}
-              handleClose={handleCloseEdit}
-            />
-          </DialogContent>
-        </Dialog>
-      </Box>
       </Container>
     </div>
   );

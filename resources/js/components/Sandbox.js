@@ -148,6 +148,6 @@ const Sandbox = () => {
 };
 export default Sandbox;
 
-if (document.getElementById('sandbox')) {
+if (document.getElementById('sandbox')) { 
   ReactDOM.render(<Sandbox />, document.getElementById('sandbox'));
 }
