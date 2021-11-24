@@ -45,11 +45,11 @@ const Header = () => {
     <div className="App">
       <AppBar className={classes.appBar} position="static">
         <Toolbar>
-          <Link href="http://myblog.com/" underline="none" className={classes.pageTitle}>
-            <Typography variant="h6" color="primary" >
-              My Blog
-            </Typography>
-          </Link>
+          {/* <Link href="http://myblog.com/" underline="none" className={classes.pageTitle}> */}
+          <Typography variant="h6" color="primary" className={classes.pageTitle}>
+            My Blog
+          </Typography>
+          {/* </Link> */}
           <Link href="http://myblog.com/login-page" className={classes.loginButton}>
             <Typography color="primary">
               Login
@@ -76,9 +76,57 @@ const Header = () => {
     </div>
   );
 }
-
 export default Header;
+
+// const LoggedInHeader = () => {
+//   const classes = useStyles();
+//   return (
+//     <div className="App">
+//       <AppBar className={classes.appBar} position="static">
+//         <Toolbar>
+//           {/* <Link href="http://myblog.com/" underline="none" className={classes.pageTitle}> */}
+//           <Typography variant="h6" color="primary" className={classes.pageTitle}>
+//             My Blog
+//           </Typography>
+//           {/* </Link> */}
+//           <Link href="http://myblog.com/login-page" className={classes.loginButton}>
+//             <Typography color="primary">
+//               Login
+//             </Typography>
+//           </Link>
+//           <Typography color="primary">
+//               |
+//             </Typography>
+//           <Link href="http://myblog.com/register-page" className={classes.registerButton}>
+//             <Typography color="primary">
+//               Register
+//             </Typography>
+//           </Link>
+//           <Typography color="primary">
+//               |
+//             </Typography>
+//           <Link href="http://myblog.com/logout-page" className={classes.logoutButton}>
+//             <Typography color="primary">
+//               Logout
+//             </Typography>
+//           </Link>
+//         </Toolbar>
+//       </AppBar>
+//     </div>
+//   );
+// }
+
+// export default LoggedInHeader;
+
+// export {
+//   Header,
+//   LoggedInHeader
+// }
 
 if (document.getElementById('header')) {
   ReactDOM.render(<Header />, document.getElementById('header'));
 }
+
+// if (document.getElementById('loggedInHeader')) {
+//   ReactDOM.render(<LoggedInHeader />, document.getElementById('loggedInHeader'));
+// }

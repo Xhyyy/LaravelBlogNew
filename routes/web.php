@@ -18,7 +18,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin', 'PagesController@admin');
     Route::get('/author', 'PagesController@author');
     Route::get('/home-page', 'PagesController@landingPage');
+    // Route::post('api/blog/addOrUpdate', 'PostController@storeOrUpdate');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('api/blog')->group(function () {
+        Route::post('/addOrUpdate', 'PostController@storeOrUpdate');
+        Route::post('/authorShowBlogs', 'PostController@authorShowBlogs');
+        Route::post('/authorShowUnpublishedBlogs', 'PostController@authorShowUnpublishedBlogs');     
+    });
+});
+// Route::post('/addOrUpdate', 'PostController@storeOrUpdate');
 Route::get('/register-page', 'PagesController@register');
 Route::get('/login-page', 'PagesController@login');
 Route::get('/logout-page', 'UserController@logout');

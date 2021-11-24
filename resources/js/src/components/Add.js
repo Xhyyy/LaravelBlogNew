@@ -13,7 +13,8 @@ const Add = (props) => {
   const addBlog = async(data) => {
     const dataToSend = {            
       title: data.title,
-      content: data.content
+      content: data.content,
+      // user_id: data.user_id
     };
         
     const response = await api.post('api/blog/addOrUpdate', dataToSend);

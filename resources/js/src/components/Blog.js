@@ -95,7 +95,7 @@ const Blog = () => {
                 return (
                   <Grid item xs={12} sm={6} md={4} key={datas.id}>
                     <Card className={classes.card} >
-                      <CardActionArea>
+                      {/* <CardActionArea> */}
                         <CardContent>
                           <Typography gutterBottom variant="h5" component="h2" color="primary">
                             {datas.title}
@@ -104,16 +104,16 @@ const Blog = () => {
                             {datas.content}
                           </Typography>
                         </CardContent>
-                      </CardActionArea>
+                      {/* </CardActionArea> */}
                       <CardActions className={classes.cardActions}>
                         <Box display='flex' flexDirection='column'>
                           <Box className={classes.author}>
                             <Box>
                               <Typography variant="subtitle2" component="p">
-                                By: Jane Doe
+                                Author: {datas.name}
                               </Typography>
                               <Typography variant="subtitle2" color="textSecondary" component="p">
-                                Published Date: {datas.created_at}
+                                Published Date: {datas.publish_date}
                               </Typography>
                             </Box>
                           </Box>

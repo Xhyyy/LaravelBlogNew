@@ -227,7 +227,7 @@ const Author = () => {
   };
 
   const blogPost = async () => {
-    const result = await api.post('api/blog/showBlog');
+    const result = await api.post('api/blog/authorShowBlogs');
     if (result.status == 200) {
       setBlog(result.data.blogData);
     }
@@ -244,7 +244,8 @@ const Author = () => {
     setShowChanges('...Please wait');
     const dataToPublish = {
       id: data.id,
-      status: 'published'
+      status: 'published',
+      // user_id: data.user_id
     }
     const response = await api.post('api/blog/addOrUpdate', dataToPublish);
     if (response.status == 200 && response.data.code == 200) {

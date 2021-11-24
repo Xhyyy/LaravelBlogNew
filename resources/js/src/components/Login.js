@@ -13,11 +13,12 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const LoginUser = async (data) => {
-    console.log('---->', data);
+    // console.log('---->', data);
     const response = await api.post('/login', data);
-    if (response.data.code == 200) {
-      console.log('Success', response.data.user);
-      window.location.href = '/home-page'
+    if (response.status == 200 && response.data.code == 200) {
+      // console.log('Success', response.data.user);
+      console.log(response.data.message);
+      window.location.href = '/home-page';
     } else {
       console.log(response.data.message);
     }

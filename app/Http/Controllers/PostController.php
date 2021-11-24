@@ -17,6 +17,9 @@ class PostController extends Controller
 
     public function storeOrUpdate(Request $request)
     {
+        $userData = collect(\Auth::user())->map(function($data){
+            return $data;
+        });
         $blog = $request -> all();
         if(isset($blog['id'])){
             $id = $blog['id'];
@@ -32,6 +35,7 @@ class PostController extends Controller
         }else{
             $blog['created_at'] =  gmdate('Y-m-d H:i:s');
             $blog['status'] = 'published';
+            $blog['user_id'] = $userData['id'];
             $posts = Post::firstOrCreate($blog);
             $response['code'] = 200;
             $response['message'] = 'Successfully Created';
@@ -53,10 +57,68 @@ class PostController extends Controller
             'posts.created_at',
             'posts.updated_at',
             'posts.status',
+
+            'name',
+            Post::raw('DATE_FORMAT(posts.created_at, "%d-%b-%Y") as publish_date')
+            // selectRaw('date_format(posts.created_at,%M-%d-%Y) as publish_date')
         ];
-        $blog = Post::select($select)->orderBy('id', 'DESC')->where('posts.status', '=', 'published')
+        $blog = Post::select($select)->orderBy('id', 'DESC')
+        ->where('posts.status', '=', 'published')
         // ->where('user_id','=',$userData['id'])
-        ->join('users','users.id','=','posts.user_id');
+        ->join('users','users.id','posts.user_id');
+        if(isset($params['id'])){
+            $blog -> where('id', '=', $params['id']);
+        }
+        $response['blogData'] = $blog->get();
+        return $response;
+    }
+
+    public function authorShowBlogs(Request $request)
+    {
+        $userData = collect(\Auth::user())->map(function($data){
+            return $data;
+        });
+        $params = $request -> all();
+        $select = [
+            'posts.id',
+            'title',
+            'content',
+            'posts.created_at',
+            'posts.updated_at',
+            'posts.status',
+        ];
+        $blog = Post::select($select)->orderBy('id', 'DESC')
+                    ->where('posts.status', '=', 'published')
+                    ->where('user_id','=',$userData['id'])
+                    ;
+        // ->where('user_id','=',$userData['id'])
+        // ->join('users','users.id','=','posts.user_id');
+        if(isset($params['id'])){
+            $blog -> where('id', '=', $params['id']);
+        }
+        $response['blogData'] = $blog->get();
+        return $response;
+    }
+
+    public function authorShowUnpublishedBlogs(Request $request)
+    {
+        $userData = collect(\Auth::user())->map(function($data){
+            return $data;
+        });
+
+        $params = $request -> all();
+        $select = [
+            'id',
+            'title',
+            'content',
+            'created_at',
+            'updated_at',
+            'status',
+        ];
+        $blog = Post::select($select)->orderBy('id', 'DESC')
+                ->where('status', '=', 'unpublish')
+                ->where('user_id','=',$userData['id'])
+                ;
         if(isset($params['id'])){
             $blog -> where('id', '=', $params['id']);
         }
@@ -80,28 +142,6 @@ class PostController extends Controller
             $blogList -> where('id', '=', $params['id']);
         }
         $response['blogData'] = $blogList->get();
-        return $response;
-    }
-
-    public function authorShowUnpublishedBlogs(Request $request)
-    {
-        $userData = collect(\Auth::user())->map(function($data){
-            return $data;
-        });
-        $params = $request -> all();
-        $select = [
-            'id',
-            'title',
-            'content',
-            'created_at',
-            'updated_at',
-            'status',
-        ];
-        $blog = Post::select($select)->orderBy('id', 'DESC')->where('status', '=', 'unpublish');
-        if(isset($params['id'])){
-            $blog -> where('id', '=', $params['id']);
-        }
-        $response['blogData'] = $blog->get();
         return $response;
     }
 

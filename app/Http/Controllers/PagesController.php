@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
+
 
 class PagesController extends Controller
 {
@@ -14,7 +16,6 @@ class PagesController extends Controller
         $userData = collect(\Auth::user())->map(function($data){
             return $data;
         });
-
         if($userData['role'] == 'admin') {
             return view('pages.admin');
         }else {
@@ -26,7 +27,6 @@ class PagesController extends Controller
         $userData = collect(\Auth::user())->map(function($data){
             return $data;
         });
-        session(['user_id'=>$userData['id']]);
         if($userData['role'] == 'author') {
             return view('pages.author');
         }else {
@@ -46,10 +46,15 @@ class PagesController extends Controller
         $userData = collect(\Auth::user())->map(function($data){
             return $data;
         });
-       if($userData['role'] == 'admin'){
-            return view('pages.admin');
-       }else{
-            return view('pages.author');
-       }
+        if($userData['status']=='enabled'){        
+            if($userData['role'] == 'admin'){
+                return view('pages.admin');
+            }else{
+                return view('pages.author');
+            }
+        }else{
+            Auth::logout();
+            return view('pages.login');
+        }
     }
 }

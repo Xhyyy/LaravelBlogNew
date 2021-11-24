@@ -18,15 +18,19 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('blog')->group(function () {
-    Route::post('/addOrUpdate', 'PostController@storeOrUpdate');
-    Route::post('/showBlog', 'PostController@showBlogs');
-    Route::post('/authorShowUnpublishedBlogs', 'PostController@authorShowUnpublishedBlogs');
-    Route::post('/adminShowBlog', 'PostController@adminShowBlogs');
-    Route::post('/adminShowUnpublishedBlogs', 'PostController@adminShowUnpublishedBlogs');
-    Route::post('/showDeletedBlogs', 'PostController@showDeletedBlogs');
-    Route::post('/destroy', 'PostController@destroy');
-});
+// Route::middleware(['auth:api'])->group(function () {
+    Route::prefix('blog')->group(function () {
+        // Route::post('/addOrUpdate', 'PostController@storeOrUpdate');
+        Route::post('/showBlog', 'PostController@showBlogs');
+        // Route::post('/authorShowBlogs', 'PostController@authorShowBlogs');
+        // Route::post('/authorShowUnpublishedBlogs', 'PostController@authorShowUnpublishedBlogs');
+        Route::post('/adminShowBlog', 'PostController@adminShowBlogs');
+        Route::post('/adminShowUnpublishedBlogs', 'PostController@adminShowUnpublishedBlogs');
+        Route::post('/showDeletedBlogs', 'PostController@showDeletedBlogs');
+        Route::post('/destroy', 'PostController@destroy');
+    });
+    
+// });
 
 Route::prefix('user')->group(function () {
     Route::post('/registerUser', 'UserController@registerUser');

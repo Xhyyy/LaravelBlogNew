@@ -1,16 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use App\User;
-use Redirect, Response, File;
 
-class UserController extends Controller
+class LoginController extends Controller
 {
-
+    protected $redirectTo = 'pages.author';
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -19,8 +17,16 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
+    protected function create(array $data)
+    {
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+    }
 
-    function registerUser(Request $request)
+    public function createUser(Request $request)
     {
         $params = $request -> all();
         $selectUser = User::select([
@@ -43,14 +49,7 @@ class UserController extends Controller
         return $response;
     }
 
-    function logout() {
-        // if(Auth::user()) {
-            Auth::logout();
-            return redirect('/login-page');
-        // }
-    }
-
-    function login(Request $request)
+    public function loginUser(Request $request)
     {
         $params = $request -> all();
         $selectUser = [
@@ -60,22 +59,22 @@ class UserController extends Controller
             'role',
             'password'
         ];
-        $this->validate($request, [
-            'email'=> 'required|max:32',
-            'password'=> 'required|max:32|min:8',
-        ]);
-        if(isset($params['email']) && isset($params['password'])){            
-            if (Auth::attempt(['email'=>$request->email,'password'=>$request->password])) {
-                $user = User::where('email','=',$request->email)->first();
-                Auth::login($user);
-                // $checkDetails = Hash::check($params['password'], $user->password);
+        if(isset($params['email']) && isset($params['password'])){
+            // $selectedUser = User::select($selectUser)
+            //     ->where('email', '=', $params['email'])
+            //     ->where('password', '=', Hash::check('password',$params['password']))
+            //     ->where('status', '=', 'enabled')
+            //     ->get();
 
+            $userData = User::where('email','=', $params['email'])->where('status', '=', 'enabled')->first();
+            $checkDetails = Hash::check($params['password'], $userData->password);
+            
+            if($checkDetails) {
+                // return view('pages.author');
+                
                 $response['code'] = 200;
                 $response['message'] = 'Login Successfuly';
-                // $response['user'] = \Auth::user();
-
-                return $response;
-            }else {
+            }else{
                 $response['code'] = 429;
                 $response['message'] = 'Login Failed';
             }
