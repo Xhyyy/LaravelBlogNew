@@ -46,7 +46,7 @@ class UserController extends Controller
     function logout() {
         // if(Auth::user()) {
             Auth::logout();
-            return redirect('/login-page');
+            return view('pages.login');
         // }
     }
 
@@ -86,7 +86,7 @@ class UserController extends Controller
         return $response;
     }
 
-    public function showUsers(Request $request)
+    public function showActiveUsers(Request $request)
     {
         
         $params = $request -> all();
@@ -97,7 +97,33 @@ class UserController extends Controller
             'role',
             'status'
         ];
-        $usersList = User::select($select)->orderBy('name', 'ASC');
+        $usersList = User::select($select)
+                ->orderBy('name', 'ASC')
+                ->where('status', '=', 'enabled')
+                ->where('role', '!=', 'admin')
+                ;
+        if(isset($params['id'])){
+            $usersList -> where('id', '=', $params['id']);
+        }
+        $response['data'] = $usersList->get();
+        return $response;
+    }
+
+    public function showDisabledUsers(Request $request)
+    {
+        
+        $params = $request -> all();
+        $select = [
+            'id',
+            'name',
+            'email',
+            'role',
+            'status'
+        ];
+        $usersList = User::select($select)
+                ->orderBy('name', 'ASC')
+                ->where('status', '=', 'disabled')
+                ;
         if(isset($params['id'])){
             $usersList -> where('id', '=', $params['id']);
         }

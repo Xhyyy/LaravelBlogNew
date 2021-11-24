@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 // Route::middleware(['auth:api'])->group(function () {
     Route::prefix('blog')->group(function () {
@@ -34,6 +34,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('user')->group(function () {
     Route::post('/registerUser', 'UserController@registerUser');
-    Route::post('/showUser', 'UserController@showUsers');
+    // Route::post('/showUser', 'UserController@showUsers');
     Route::post('/updateUser', 'UserController@updateUser');
 });

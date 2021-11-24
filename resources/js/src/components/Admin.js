@@ -30,6 +30,7 @@ const Admin = () => {
   // const [blog, setBlog] = useState([]);
   const [adminBlogsList, setAdminBlogsList] = useState([]);
   const [adminUsersList, setAdminUsersList] = useState([]);
+  const [adminDisabledUsersList, setadminDisabledUsersList] = useState([]);
   const [adminUnpublishedBlogs, setAdminUnpublishedBlogs] = useState([]);
   const [adminDeletedBlogs, setadminDeletedBlogs] = useState([]);
   const [showChanges, setShowChanges] = useState('');
@@ -198,7 +199,7 @@ const Admin = () => {
     },
   ];
 
-  const adminUsersListColumn = [
+  const adminActiveUsersListColumns = [
     {
       field: 'name',
       headerName: 'Name',
@@ -237,6 +238,52 @@ const Admin = () => {
               onClick={() => disableUser(params.row)}
             >
               Disable
+            </Button>
+          </div >
+        )
+      }
+    },
+  ];
+
+  const adminDisabledUsersListColumns = [
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      editable: false
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      flex: 1,
+      editable: false
+    },
+    {
+      field: 'role',
+      headerName: 'Role',
+      flex: 1,
+      editable: false
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+      editable: false
+    },
+    {
+      field: 'Actions',
+      flex: 1,
+      renderCell: (params) => {
+        // console.log('------the params', params.row);
+        return (
+          <div>
+            <Button
+              variant="outlined"
+              size='small'
+              color='secondary'
+              onClick={() => enableUser(params.row)}
+            >
+              Enable
             </Button>
           </div >
         )
@@ -318,6 +365,13 @@ const Admin = () => {
     }
   }
 
+  const adminShowDisabledUsers = async () => {
+    const result = await api.post('api/user/showDisabledUsers');
+    if (result.status == 200) {
+      setadminDisabledUsersList(result.data.data);
+    }
+  }
+
   const disableUser = async (data) => {
     setShowChanges('...Please wait');
     const statusToSend = {
@@ -333,9 +387,25 @@ const Admin = () => {
     }
   }
 
+  const enableUser = async (data) => {
+    setShowChanges('...Please wait');
+    const statusToSend = {
+      id: data.id,
+      status: 'enabled'
+    }
+    const response = await api.post('api/user/updateUser', statusToSend);
+    if (response.status == 200 && response.data.code == 200) {
+      setShowChanges('User Enabled');
+      alert(response.data.message);
+    } else {
+      alert('ERROR');
+    }
+  }
+
   useEffect(() => {
     adminBlogPost();
     adminShowUsers();
+    adminShowDisabledUsers();
     unpublishedBlogPosts();
     deletedBlogPosts();
   }, [showChanges]);
@@ -395,7 +465,7 @@ const Admin = () => {
             <div style={{ width: '100%' }}>
               <DataGrid
                 rows={adminUsersList}
-                columns={adminUsersListColumn}
+                columns={adminActiveUsersListColumns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
                 autoHeight={true}
@@ -407,8 +477,8 @@ const Admin = () => {
             <Typography variant="h6">DISABLED USERS</Typography>
             <div style={{ width: '100%' }}>
               <DataGrid
-                rows={adminUsersList}
-                columns={adminUsersListColumn}
+                rows={adminDisabledUsersList}
+                columns={adminDisabledUsersListColumns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
                 autoHeight={true}

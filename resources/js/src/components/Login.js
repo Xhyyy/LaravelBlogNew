@@ -6,8 +6,8 @@ import { Avatar, Container, Link, Typography } from '@mui/material';
 import { LockOutlined } from '@material-ui/icons';
 
 const Login = () => {
-  const paperStyle={padding:20, height:'70vh', width:280, margin:"20px auto"}
-  const avatarStyle={backgroundColor:'#3370bd'}
+  const paperStyle = { padding: 20, height: '70vh', width: 280, margin: "20px auto" }
+  const avatarStyle = { backgroundColor: '#3370bd' }
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,7 +39,7 @@ const Login = () => {
               variant='outlined'
               type='email'
               placeholder='Email'
-              style={{margin:'2px 0'}}
+              style={{ margin: '2px 0' }}
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
             />
@@ -48,7 +48,7 @@ const Login = () => {
               variant='outlined'
               placeholder='Password'
               type='password'
-              style={{margin:'2px 0'}}
+              style={{ margin: '2px 0' }}
               onChange={(e) => setPassword(e.target.value)}
               fullWidth
             />
@@ -56,7 +56,7 @@ const Login = () => {
               variant='contained'
               color='primary'
               type='submit'
-              style={{margin:'2px 0'}}
+              style={{ margin: '2px 0' }}
               fullWidth
               onClick={() => LoginUser({
                 email: email,
@@ -67,7 +67,7 @@ const Login = () => {
             </Button>
             <Typography textAlign='center'>Dont have an account?
               <Link href="/register-page">
-                <span style={{marginLeft:"4px"}}>Register</span> 
+                <span style={{ marginLeft: "4px" }}>Register</span>
               </Link>
             </Typography>
           </Paper>

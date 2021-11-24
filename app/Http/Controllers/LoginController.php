@@ -8,7 +8,6 @@ use App\User;
 
 class LoginController extends Controller
 {
-    protected $redirectTo = 'pages.author';
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -49,41 +48,41 @@ class LoginController extends Controller
         return $response;
     }
 
-    public function loginUser(Request $request)
-    {
-        $params = $request -> all();
-        $selectUser = [
-            'id',
-            'email',
-            'name',
-            'role',
-            'password'
-        ];
-        if(isset($params['email']) && isset($params['password'])){
-            // $selectedUser = User::select($selectUser)
-            //     ->where('email', '=', $params['email'])
-            //     ->where('password', '=', Hash::check('password',$params['password']))
-            //     ->where('status', '=', 'enabled')
-            //     ->get();
+    // public function loginUser(Request $request)
+    // {
+    //     $params = $request -> all();
+    //     $selectUser = [
+    //         'id',
+    //         'email',
+    //         'name',
+    //         'role',
+    //         'password'
+    //     ];
+    //     if(isset($params['email']) && isset($params['password'])){
+    //         // $selectedUser = User::select($selectUser)
+    //         //     ->where('email', '=', $params['email'])
+    //         //     ->where('password', '=', Hash::check('password',$params['password']))
+    //         //     ->where('status', '=', 'enabled')
+    //         //     ->get();
 
-            $userData = User::where('email','=', $params['email'])->where('status', '=', 'enabled')->first();
-            $checkDetails = Hash::check($params['password'], $userData->password);
+    //         $userData = User::where('email','=', $params['email'])->where('status', '=', 'enabled')->first();
+    //         $checkDetails = Hash::check($params['password'], $userData->password);
             
-            if($checkDetails) {
-                // return view('pages.author');
+    //         if($checkDetails) {
+    //             // return view('pages.author');
                 
-                $response['code'] = 200;
-                $response['message'] = 'Login Successfuly';
-            }else{
-                $response['code'] = 429;
-                $response['message'] = 'Login Failed';
-            }
-        }else {
-            $response['code'] = 400;
-            $response['message'] = 'Empty fields not allowed.';
-        }
-        return $response;
-    }
+    //             $response['code'] = 200;
+    //             $response['message'] = 'Login Successfuly';
+    //         }else{
+    //             $response['code'] = 429;
+    //             $response['message'] = 'Login Failed';
+    //         }
+    //     }else {
+    //         $response['code'] = 400;
+    //         $response['message'] = 'Empty fields not allowed.';
+    //     }
+    //     return $response;
+    // }
 
     public function showUsers(Request $request)
     {

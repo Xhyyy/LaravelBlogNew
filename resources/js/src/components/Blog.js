@@ -85,7 +85,7 @@ const Blog = () => {
   return (
     <div>
       <Box className={classes.hero}>
-        <Box>Blog Page</Box>
+        <Box>Blogs</Box>
       </Box>
       <Container>
         <Grid container spacing={3}>
