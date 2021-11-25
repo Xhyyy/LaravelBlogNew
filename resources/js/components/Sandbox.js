@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography } from '@material-ui/core';
 import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import { Field, Form, Formik } from 'formik';

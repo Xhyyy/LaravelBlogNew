@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
 import { TextField, Grid, Button, Paper } from '@material-ui/core';
 import api from '../api';
-import { Avatar, Container, Link, Typography } from '@mui/material';
+import { Avatar, Container, Link, Typography } from '@material-ui/core';
 import { LockOutlined } from '@material-ui/icons';
 
 const Register = () => {
@@ -91,7 +91,7 @@ const Register = () => {
             >
               Register
             </Button>
-            <Typography textAlign='center'>Click Here to
+            <Typography textalign='center'>Click Here to
               <Link href="/login-page">
                 <span style={{marginLeft:"4px"}}>Login</span> 
               </Link>

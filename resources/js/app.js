@@ -14,8 +14,10 @@ require('./bootstrap');
  */
 
 require('./src/components/Header');
+require('./src/components/LoggedinHeader');
 require('./src/components/Index');
 require('./src/components/Blog');
+require('./src/components/IndividualBlog');
 require('./src/components/Admin');
 require('./src/components/Author');
 require('./src/components/Register');

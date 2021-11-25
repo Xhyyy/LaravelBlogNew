@@ -8,7 +8,7 @@ use Auth;
 
 class PagesController extends Controller
 {
-    public function blog(){
+    public function index(){
         return view('pages.blog');
     }
 

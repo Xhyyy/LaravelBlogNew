@@ -148,7 +148,7 @@ const Admin = () => {
             <Button
               variant="outlined"
               size='small'
-              color='secondary'
+              color='primary'
               onClick={() => publishBlog(params.row)}
             >
               Publish
@@ -188,7 +188,7 @@ const Admin = () => {
             <Button
               variant="outlined"
               size='small'
-              color='secondary'
+              color='primary'
               onClick={() => publishBlog(params.row)}
             >
               Restore
@@ -280,7 +280,7 @@ const Admin = () => {
             <Button
               variant="outlined"
               size='small'
-              color='secondary'
+              color='primary'
               onClick={() => enableUser(params.row)}
             >
               Enable

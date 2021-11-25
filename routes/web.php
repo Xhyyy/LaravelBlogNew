@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'PagesController@blog');
+Route::get('individual-blog/{id}', function () {
+    return view('posts.show');
+});
+Route::get('/', 'PagesController@index');
+// Route::get('individual-blog/{id}', 'PostController@showIndividualBlog');
 Route::middleware('auth')->group(function () {
     Route::get('/admin', 'PagesController@admin');
     Route::get('/author', 'PagesController@author');
@@ -45,9 +49,9 @@ Route::get('/sandbox', function() {
     return view('sandbox');
 });
 
-Route::get('/123', function() {
-    return \Auth::user();
-});
+// Route::get('/123', function() {
+//     return \Auth::user();
+// });
 // Route::get('/user', 'UserController@index');
 Auth::routes();
 

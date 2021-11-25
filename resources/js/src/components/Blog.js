@@ -2,11 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import api from '../api';
-import { Dialog, DialogTitle, DialogContent, ButtonBase, Container } from '@material-ui/core';
-import { makeStyles, Button, IconButton, Typography, Box, Grid, Card, CardActionArea, CardActions, CardContent } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Container } from '@material-ui/core';
+import { makeStyles, IconButton, Typography, Box, Grid, Card, CardActionArea, CardActions, CardContent } from '@material-ui/core';
 import { HighlightOff } from '@material-ui/icons';
-import Add from './Add';
-import Edit from './Edit';
+import IndividualBlog from './IndividualBlog';
 
 const useStyles = makeStyles((theme) => ({
   hero: {
@@ -70,6 +69,10 @@ const useStyles = makeStyles((theme) => ({
 const Blog = () => {
   const classes = useStyles();
   const [blog, setBlog] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [blogTitle, setBlogTitle] = useState('');
+  const [blogContent, setBlogContent] = useState('');
+  const [blogId, setBlogId] = useState(0);
 
   const blogPost = async () => {
     const result = await api.post('api/blog/showBlog');
@@ -78,9 +81,21 @@ const Blog = () => {
     }
   };
 
+  const handleBlogDialog = (data) => {
+    console.log('---->',data.id);
+    setBlogTitle(data.title);
+    setBlogContent(data.content);
+    setBlogId(data.id);
+    setOpenDialog(true);
+  };
+
+  const closeDialog = () => {
+    setOpenDialog(false);
+  }
+
   useEffect(() => {
     blogPost();
-  }, []);
+  }, [openDialog]);
 
   return (
     <div>
@@ -95,7 +110,10 @@ const Blog = () => {
                 return (
                   <Grid item xs={12} sm={6} md={4} key={datas.id}>
                     <Card className={classes.card} >
-                      {/* <CardActionArea> */}
+                      {/* <CardActionArea onClick={()=> indiBlog(datas.id)}> */}
+                      <CardActionArea 
+                        onClick={() => handleBlogDialog(datas.id)}
+                      >
                         <CardContent>
                           <Typography gutterBottom variant="h5" component="h2" color="primary">
                             {datas.title}
@@ -104,7 +122,7 @@ const Blog = () => {
                             {datas.content}
                           </Typography>
                         </CardContent>
-                      {/* </CardActionArea> */}
+                      </CardActionArea>
                       <CardActions className={classes.cardActions}>
                         <Box display='flex' flexDirection='column'>
                           <Box className={classes.author}>
@@ -120,7 +138,29 @@ const Blog = () => {
                         </Box>
                       </CardActions>
                     </Card>
+
+                    <Dialog onClose={closeDialog} open={openDialog}>
+                      <Box>
+                        <DialogTitle onClose={closeDialog}>
+                          <IconButton onClick={closeDialog}>
+                            <HighlightOff />
+                          </IconButton>
+                          <Box flexGrow={1} />
+                            {blogTitle}
+                        </DialogTitle>
+                      </Box>
+
+                      <DialogContent>
+                        <IndividualBlog 
+                          blogTitle={blogTitle}
+                          blogContent={blogContent}
+                          blogId={blogId}
+                          handleClose={closeDialog}
+                        />
+                      </DialogContent>
+                    </Dialog>
                   </Grid>
+
                 );
               })
           }

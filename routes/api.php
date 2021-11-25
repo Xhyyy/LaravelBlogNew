@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
     Route::prefix('blog')->group(function () {
         // Route::post('/addOrUpdate', 'PostController@storeOrUpdate');
         Route::post('/showBlog', 'PostController@showBlogs');
+        Route::post('/showIndividualBlog', 'PostController@showIndividualBlog');
         // Route::post('/authorShowBlogs', 'PostController@authorShowBlogs');
         // Route::post('/authorShowUnpublishedBlogs', 'PostController@authorShowUnpublishedBlogs');
         Route::post('/adminShowBlog', 'PostController@adminShowBlogs');

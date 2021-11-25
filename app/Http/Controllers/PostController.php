@@ -44,7 +44,14 @@ class PostController extends Controller
 
     }
 
-    public function showBlogs(Request $request)
+    // public function showIndividualBlog(Request $request) {
+    //     $params = $request -> all();
+    //     // $id = $params['id'];
+    //     $post = Post::find($params['id']);
+        
+    // }
+
+    public function showBlogs(Request $request) //to show the complete list of blogs
     {
         $userData = collect(\Auth::user())->map(function($data){
             return $data;
@@ -71,6 +78,12 @@ class PostController extends Controller
         }
         $response['blogData'] = $blog->get();
         return $response;
+    }
+
+    public function showIndividualBlog($id) {
+        return Post::find($id);
+        // return view('posts.show')
+        //     ;
     }
 
     public function authorShowBlogs(Request $request)

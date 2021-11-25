@@ -1,3 +1,4 @@
+{{-- @extends('layouts.loggedinHeader') --}}
 @extends('layouts.header')
 
 @section('content')

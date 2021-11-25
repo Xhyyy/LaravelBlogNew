@@ -22,7 +22,7 @@ const Add = (props) => {
       handleClose();
       alert(response.data.message);
     }else {
-      alert('ERROR!');
+      alert('ERROR! Empty Fields Not Allowed');
     }
   };
     
