@@ -44,12 +44,11 @@ class PostController extends Controller
 
     }
 
-    // public function showIndividualBlog(Request $request) {
-    //     $params = $request -> all();
-    //     // $id = $params['id'];
-    //     $post = Post::find($params['id']);
-        
-    // }
+    public function addComment(Request $request) 
+    {
+        $params = $request -> all();
+        // $blog['comment_id']
+    }
 
     public function showBlogs(Request $request) //to show the complete list of blogs
     {
@@ -80,11 +79,9 @@ class PostController extends Controller
         return $response;
     }
 
-    public function showIndividualBlog($id) {
-        return Post::find($id);
-        // return view('posts.show')
-        //     ;
-    }
+    // public function showIndividualBlog($id) {
+    //     return Post::find($id);
+    // }
 
     public function authorShowBlogs(Request $request)
     {

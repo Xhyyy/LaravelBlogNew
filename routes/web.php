@@ -12,11 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('individual-blog/{id}', function () {
-    return view('posts.show');
-});
 Route::get('/', 'PagesController@index');
+
 // Route::get('individual-blog/{id}', 'PostController@showIndividualBlog');
 Route::middleware('auth')->group(function () {
     Route::get('/admin', 'PagesController@admin');
